@@ -8,9 +8,15 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team6038.framework.components.Devices;
+import org.usfirst.frc.team6038.framework.components.Trackers;
+import org.usfirst.frc.team6038.framework.trackers.JoystickTracker;
+import org.usfirst.frc.team6038.framework.trackers.NavXTracker;
+import org.usfirst.frc.team6038.framework.trackers.NavXTracker.NavXTarget;
 import org.usfirst.frc.team6038.robot.commands.ExampleCommand;
 import org.usfirst.frc.team6038.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team6038.robot.subsystems.PIDriveTrain;
+import org.usfirst.frc.team6038.framework.trackers.JoystickTracker.JoystickType;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -24,7 +30,7 @@ public class Robot extends IterativeRobot {
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
 	
-	public static PIDriveTrain piDriveTrain;
+	public static PIDriveTrain driveTrain;
 
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
@@ -39,7 +45,7 @@ public class Robot extends IterativeRobot {
 		chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
-		piDriveTrain = new PIDriveTrain();
+		driveTrain = new PIDriveTrain();
 	}
 
 	/**
@@ -116,5 +122,17 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 		LiveWindow.run();
+	}
+	public void addDevices() {
+		Devices.getInstance().addTalon(RobotMap.BACK_LEFT);
+		Devices.getInstance().addTalon(RobotMap.BACK_RIGHT);
+		Devices.getInstance().addTalon(RobotMap.FRONT_LEFT);
+		Devices.getInstance().addTalon(RobotMap.FRONT_RIGHT);
+	}
+	
+	public void addTrackers() {
+		Trackers.getInstance().addTracker(new NavXTracker(RobotMap.GYRO_YAW, NavXTarget.YAW));
+		Trackers.getInstance().addTracker(new NavXTracker(RobotMap.GYRO_RATE, NavXTarget.RATE));
+		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_KEY, ControlsMap.THROTTLE, JoystickType.Z));
 	}
 }
