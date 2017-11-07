@@ -12,6 +12,11 @@ public class RobotMap {
 	public static final int BACK_RIGHT = 5;
 	public static final int BACK_LEFT = 3;
 	
+	public static final String FRONT_RIGHT_ENC = "FR_ENC";
+	public static final String FRONT_LEFT_ENC = "FL_ENC";
+	public static final String BACK_RIGHT_ENC = "BR_ENC";
+	public static final String BACK_LEFT_ENC = "BL_ENC";
+	
 	public static final int MOTOR = 6;
 	public static final int SERVO = 0;
 	public static final int GYRO = 0;

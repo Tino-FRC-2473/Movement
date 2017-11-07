@@ -8,6 +8,13 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team6038.framework.components.Devices;
+import org.usfirst.frc.team6038.framework.components.Trackers;
+import org.usfirst.frc.team6038.framework.trackers.EncoderTracker;
+import org.usfirst.frc.team6038.framework.trackers.JoystickTracker;
+import org.usfirst.frc.team6038.framework.trackers.JoystickTracker.Type;
+import org.usfirst.frc.team6038.framework.trackers.TalonTracker;
+import org.usfirst.frc.team6038.framework.trackers.TalonTracker.Target;
 import org.usfirst.frc.team6038.robot.commands.ExampleCommand;
 import org.usfirst.frc.team6038.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team6038.robot.subsystems.PIDriveTrain;
@@ -100,6 +107,7 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
+		
 	}
 
 	/**
@@ -116,5 +124,24 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 		LiveWindow.run();
+	}
+	
+	private static void addDevices(){
+		Devices.getInstance().addTalon(RobotMap.BACK_RIGHT);
+		Devices.getInstance().addTalon(RobotMap.BACK_LEFT);
+		Devices.getInstance().addTalon(RobotMap.FRONT_LEFT);
+		Devices.getInstance().addTalon(RobotMap.FRONT_RIGHT);
+	}
+	
+	private static void addTrackers(){
+//		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.BACK_RIGHT_ENC, RobotMap.BACK_RIGHT));
+//		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.BACK_LEFT_ENC, RobotMap.BACK_LEFT));
+		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.FRONT_RIGHT_ENC, RobotMap.FRONT_RIGHT));
+		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.FRONT_LEFT_ENC, RobotMap.FRONT_LEFT));
+		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_Z,ControlsMap.THROTTLE,Type.THROTTLE));
+		Trackers.getInstance().addTracker(new TalonTracker("pfr",RobotMap.FRONT_RIGHT,Target.POWER));
+		Trackers.getInstance().addTracker(new TalonTracker("pfl",RobotMap.FRONT_LEFT,Target.POWER));
+		Trackers.getInstance().addTracker(new TalonTracker("pbr",RobotMap.BACK_RIGHT,Target.POWER));
+		Trackers.getInstance().addTracker(new TalonTracker("pbl",RobotMap.BACK_LEFT,Target.POWER));
 	}
 }
