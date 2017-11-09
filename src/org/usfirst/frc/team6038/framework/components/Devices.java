@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import org.usfirst.frc.team6038.framework.trackers.ExternalDevice;
 
 import com.ctre.CANTalon;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.SPI;
 
 /**
  * This class stores all existing hardware devices on the robot.
@@ -25,6 +27,7 @@ public class Devices {
 	private ArrayList<DigitalInput> digitals; //collection of digital input sensors
 	private ArrayList<Servo> servos;	 //collection of servos
 	private static Devices theInstance; //serves as the static instance to use at all times
+	private AHRS[] navX; //collection storing the singular navx gyro, size subject to change in the future
 	
 	static { //construct theInstance as a static function
 		theInstance = new Devices();
@@ -33,6 +36,7 @@ public class Devices {
 	private Devices() { //private constructor prevents the creation of such an object elsewhere, forcing the use of the public static getInstance()
 		talons = new ArrayList<CANTalon>();
 		gyros = new AnalogGyro[1];
+		navX = new AHRS[1];
 		externals = new ArrayList<ExternalDevice>();
 		analogs = new ArrayList<AnalogInput>();
 		digitals = new ArrayList<DigitalInput>();
@@ -258,5 +262,23 @@ public class Devices {
 	 */
 	public void setGyro(int port) {
 		gyros[0] = new AnalogGyro(port);
+	}
+
+	/**
+	 * Returns an navX gyro with the given channel port
+	 * @return an <code>AHRS</code> object with the given channel port
+	 */
+	public AHRS getNavXGyro() {
+		/* check the collection of existing gyros:
+		 * if the gyro exists in the collection, return it, effectively breaking out of the loop and the function
+		 * if the gyro doesn't exist: add it to the collection
+		 * then return it in the next line as the last element in the collection
+		 */
+		if(navX[0] != null) return navX[0]; 
+		setNavXGyro();
+		return navX[0];
+	}
+	public void setNavXGyro() {
+		navX[0] = new AHRS(SPI.Port.kMXP);
 	}
 }

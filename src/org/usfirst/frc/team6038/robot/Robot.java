@@ -10,14 +10,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team6038.framework.components.Devices;
 import org.usfirst.frc.team6038.framework.components.Trackers;
+import org.usfirst.frc.team6038.framework.trackers.DeviceTracker.Type;
 import org.usfirst.frc.team6038.framework.trackers.EncoderTracker;
 import org.usfirst.frc.team6038.framework.trackers.JoystickTracker;
-import org.usfirst.frc.team6038.framework.trackers.JoystickTracker.Type;
 import org.usfirst.frc.team6038.framework.trackers.TalonTracker;
 import org.usfirst.frc.team6038.framework.trackers.TalonTracker.Target;
+import org.usfirst.frc.team6038.framework.trackers.JoystickTracker;
+import org.usfirst.frc.team6038.framework.trackers.NavXTracker;
+import org.usfirst.frc.team6038.framework.trackers.NavXTracker.NavXTarget;
 import org.usfirst.frc.team6038.robot.commands.ExampleCommand;
 import org.usfirst.frc.team6038.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team6038.robot.subsystems.PIDriveTrain;
+import org.usfirst.frc.team6038.framework.trackers.JoystickTracker.JoystickType;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -31,7 +35,7 @@ public class Robot extends IterativeRobot {
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
 	
-	public static PIDriveTrain piDriveTrain;
+	public static PIDriveTrain driveTrain;
 
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
@@ -46,7 +50,7 @@ public class Robot extends IterativeRobot {
 		chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
-		piDriveTrain = new PIDriveTrain();
+		driveTrain = new PIDriveTrain();
 	}
 
 	/**
@@ -138,10 +142,13 @@ public class Robot extends IterativeRobot {
 //		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.BACK_LEFT_ENC, RobotMap.BACK_LEFT));
 		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.FRONT_RIGHT_ENC, RobotMap.FRONT_RIGHT));
 		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.FRONT_LEFT_ENC, RobotMap.FRONT_LEFT));
-		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_Z,ControlsMap.THROTTLE,Type.THROTTLE));
+		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_Z,ControlsMap.THROTTLE, JoystickType.THROTTLE));
 		Trackers.getInstance().addTracker(new TalonTracker("pfr",RobotMap.FRONT_RIGHT,Target.POWER));
 		Trackers.getInstance().addTracker(new TalonTracker("pfl",RobotMap.FRONT_LEFT,Target.POWER));
 		Trackers.getInstance().addTracker(new TalonTracker("pbr",RobotMap.BACK_RIGHT,Target.POWER));
 		Trackers.getInstance().addTracker(new TalonTracker("pbl",RobotMap.BACK_LEFT,Target.POWER));
+		Trackers.getInstance().addTracker(new NavXTracker(RobotMap.GYRO_YAW, NavXTarget.YAW));
+		Trackers.getInstance().addTracker(new NavXTracker(RobotMap.GYRO_RATE, NavXTarget.RATE));
+		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_KEY, ControlsMap.THROTTLE, JoystickType.Z));
 	}
 }

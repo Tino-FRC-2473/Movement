@@ -8,4 +8,8 @@ public class ControlsMap {
 	
 	public static final int THROTTLE = 0;
 	public static final int STEERING_WHEEL = 1;
+	
+	//public static final int THROTTLE = 0;
+	
+	public static final String THROTTLE_KEY = "throttle";
 }

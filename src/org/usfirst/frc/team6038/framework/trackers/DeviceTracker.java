@@ -117,7 +117,7 @@ public class DeviceTracker {
 	/**
 	 * Returns the assigned message call value for <code>Type.MESSAGE</code> trackers
 	 * @return the <code>StringSupplier</code> object representing the message value of this <code>DeviceTracker</code>.
-	 * @see org.usfirst.frc.team6038.framework.threading.StringSupplier
+	 * @see org.usfirst.frc.team2473.framework.threading.StringSupplier
 	 * @throws NullPointerException if <code>dataType</code> is not <code>Type.MESSAGE</code>.
 	 * */
 	public StringSupplier getterMessage() {
@@ -152,7 +152,7 @@ public class DeviceTracker {
 	 * <br><br> User lambda expressions for ease like so:
 	 * <br><br> Example: setEvokeMessage(() -&gt; messageValueMethod()); //the message value method will be called by the supplier upon evocation.
 	 * @param message a <code>StringSupplier</code> value representing the message value call
-	 * @see org.usfirst.frc.team6038.framework.threading.StringSupplier
+	 * @see org.usfirst.frc.team2473.framework.threading.StringSupplier
 	 * */
 	public void setEvokeMessage(StringSupplier message) {
 		evokeMessage = message;
