@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.io.IOException;
+
 import org.usfirst.frc.team6038.framework.components.Devices;
 import org.usfirst.frc.team6038.framework.components.Trackers;
 import org.usfirst.frc.team6038.framework.trackers.DeviceTracker.Type;
@@ -35,7 +37,9 @@ public class Robot extends IterativeRobot {
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
 	
-	public static PIDriveTrain driveTrain;
+	public static PIDriveTrain piDriveTrain;
+	
+	public static UtilitySocket CVSocket; 
 
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
@@ -50,7 +54,13 @@ public class Robot extends IterativeRobot {
 		chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
-		driveTrain = new PIDriveTrain();
+		piDriveTrain = new PIDriveTrain();
+		try {
+			CVSocket = new UtilitySocket("Jetson name filler", 5050);//pls change cuz these parameters are fake as fuck
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
