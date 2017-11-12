@@ -24,8 +24,7 @@ public class JoystickTracker extends DeviceTracker {
 				setEvokeNumeric(() -> Controls.getInstance().getJoystick(getPort()).getThrottle());
 				break;
 			case TWIST:
-				setEvokeNumeric(() -> Controls.getInstance().getJoystick(getPort()).getTwist());
-				break;
+				setEvokeNumeric(() -> Controls.getInstance().getJoystick(getPort()).getTwist());				break;
 			default:
 				throw new IllegalArgumentException("Insufficient getter argument(joystick)");
 		}

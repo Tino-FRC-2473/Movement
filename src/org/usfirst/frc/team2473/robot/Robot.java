@@ -1,21 +1,5 @@
 
-package org.usfirst.frc.team6038.robot;
-
-import java.io.IOException;
-
-import org.usfirst.frc.team6038.framework.components.Devices;
-import org.usfirst.frc.team6038.framework.components.Trackers;
-import org.usfirst.frc.team6038.framework.trackers.ButtonTracker;
-import org.usfirst.frc.team6038.framework.trackers.EncoderTracker;
-import org.usfirst.frc.team6038.framework.trackers.JoystickTracker;
-import org.usfirst.frc.team6038.framework.trackers.JoystickTracker.JoystickType;
-import org.usfirst.frc.team6038.framework.trackers.NavXTracker;
-import org.usfirst.frc.team6038.framework.trackers.NavXTracker.NavXTarget;
-import org.usfirst.frc.team6038.framework.trackers.TalonTracker;
-import org.usfirst.frc.team6038.framework.trackers.TalonTracker.Target;
-import org.usfirst.frc.team6038.robot.commands.ExampleCommand;
-import org.usfirst.frc.team6038.robot.subsystems.ExampleSubsystem;
-import org.usfirst.frc.team6038.robot.subsystems.PIDriveTrain;
+package org.usfirst.frc.team2473.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -23,6 +7,9 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import org.usfirst.frc.team2473.robot.commands.ExampleCommand;
+import org.usfirst.frc.team2473.robot.subsystems.ExampleSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -36,12 +23,6 @@ public class Robot extends IterativeRobot {
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
 
-	public static PIDriveTrain piDriveTrain;
-
-	public static UtilitySocket CVSocket; 
-
-	public static Server server;
-
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 
@@ -52,19 +33,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
-
 		chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
-		piDriveTrain = new PIDriveTrain();
-		try 
-		{
-			server = new Server();
-			CVSocket = new UtilitySocket("Jetson name filler", 5050);//pls change cuz these parameters are fake as fuck
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -73,11 +44,9 @@ public class Robot extends IterativeRobot {
 	 * the robot is disabled.
 	 */
 	@Override
-	public void disabledInit() 
-	{
-		server.turnOff();
-	}
+	public void disabledInit() {
 
+	}
 
 	@Override
 	public void disabledPeriodic() {
@@ -127,7 +96,6 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
-
 	}
 
 	/**
@@ -144,29 +112,5 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 		LiveWindow.run();
-	}
-
-	private static void addDevices(){
-		Devices.getInstance().addTalon(RobotMap.BACK_RIGHT);
-		Devices.getInstance().addTalon(RobotMap.BACK_LEFT);
-		Devices.getInstance().addTalon(RobotMap.FRONT_LEFT);
-		Devices.getInstance().addTalon(RobotMap.FRONT_RIGHT);
-	}
-
-	private static void addTrackers(){
-		//		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.BACK_RIGHT_ENC, RobotMap.BACK_RIGHT));
-		//		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.BACK_LEFT_ENC, RobotMap.BACK_LEFT));
-		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.FRONT_RIGHT_ENC, RobotMap.FRONT_RIGHT));
-		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.FRONT_LEFT_ENC, RobotMap.FRONT_LEFT));
-		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_Z,ControlsMap.THROTTLE, JoystickType.THROTTLE));
-		Trackers.getInstance().addTracker(new TalonTracker("pfr",RobotMap.FRONT_RIGHT,Target.POWER));
-		Trackers.getInstance().addTracker(new TalonTracker("pfl",RobotMap.FRONT_LEFT,Target.POWER));
-		Trackers.getInstance().addTracker(new TalonTracker("pbr",RobotMap.BACK_RIGHT,Target.POWER));
-		Trackers.getInstance().addTracker(new TalonTracker("pbl",RobotMap.BACK_LEFT,Target.POWER));
-		Trackers.getInstance().addTracker(new NavXTracker(RobotMap.GYRO_YAW, NavXTarget.YAW));
-		Trackers.getInstance().addTracker(new NavXTracker(RobotMap.GYRO_RATE, NavXTarget.RATE));
-		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_KEY, ControlsMap.THROTTLE, JoystickType.Z));
-		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON_INCREASE_KEY, 1,4));
-		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON_DECREASE_KEY, 1,2));
 	}
 }
