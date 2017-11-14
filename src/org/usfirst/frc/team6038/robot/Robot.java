@@ -13,6 +13,7 @@ import org.usfirst.frc.team6038.framework.trackers.NavXTracker;
 import org.usfirst.frc.team6038.framework.trackers.NavXTracker.NavXTarget;
 import org.usfirst.frc.team6038.framework.trackers.TalonTracker;
 import org.usfirst.frc.team6038.framework.trackers.TalonTracker.Target;
+import org.usfirst.frc.team6038.robot.commands.DriveStraight;
 import org.usfirst.frc.team6038.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team6038.robot.subsystems.PIDriveTrain;
 
@@ -96,7 +97,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = chooser.getSelected();
+		autonomousCommand = new DriveStraight();
 
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -165,7 +166,8 @@ public class Robot extends IterativeRobot {
 		Trackers.getInstance().addTracker(new NavXTracker(RobotMap.GYRO_YAW, NavXTarget.YAW));
 		Trackers.getInstance().addTracker(new NavXTracker(RobotMap.GYRO_RATE, NavXTarget.RATE));
 		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_KEY, ControlsMap.THROTTLE, JoystickType.Z));
-		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON_INCREASE_KEY, 1,4));
-		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON_DECREASE_KEY, 1,2));
+//		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON_INCREASE_KEY, 1,4));
+//		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON_DECREASE_KEY, 1,2));
+		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON, 1,3));
 	}
 }

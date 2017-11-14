@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.Scanner;
 
 import org.usfirst.frc.team6038.framework.Database;
+import org.usfirst.frc.team6038.robot.commands.TestDrive;
 
 public class Server 
 {
@@ -29,7 +30,8 @@ public class Server
 		while (isRobotRunning)
 		{
 				// Right encoder Left encoder Front Right power Front Left power Throttle Steering wheel
-				p.println(values[0]+" "+values[1]+" "+values[2]+" "+values[3]+ " "+values[4]+" "+values[5]);
+				p.print("enR: "+values[0]+"; enL:"+values[1]+"; pR: "+values[2]+"; pE: "+values[3]+ "; Th: "+values[4]+"; Wh: "+values[5]+" GY" + values[6]);
+				p.println();
 		}
 		server.close();
 	}
@@ -43,7 +45,8 @@ public class Server
 						Database.getInstance().getNumeric("pfr"),
 						Database.getInstance().getNumeric("pfl"),
 						Database.getInstance().getNumeric(ControlsMap.THROTTLE_Z),
-						Database.getInstance().getNumeric(ControlsMap.STEERING_WHEEL_X)
+						Database.getInstance().getNumeric(ControlsMap.STEERING_WHEEL_X),
+						Database.getInstance().getNumeric(RobotMap.GYRO_YAW)
 				};
 	}
 	

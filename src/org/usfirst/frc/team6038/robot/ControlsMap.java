@@ -16,4 +16,5 @@ public class ControlsMap {
 	
 	public static final String CONSTANT_BUTTON_INCREASE_KEY = "cu";
 	public static final String CONSTANT_BUTTON_DECREASE_KEY = "cd";
+	public static final String CONSTANT_BUTTON = "c";
 }

@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class TestDrive extends Command 
 {
-	private static double driveConstant = 0.5;
+	public static double driveConstant = 0.5;
 	private final double jump = 0.05;
 	
 	public TestDrive() 
@@ -21,7 +21,8 @@ public class TestDrive extends Command
 	@Override
 	protected void execute() 
 	{
-		System.out.println(Database.getInstance().getNumeric(ControlsMap.THROTTLE_Z) + " " + Database.getInstance().getNumeric(ControlsMap.STEERING_WHEEL_X)*90);
+		System.out.print("Throttle: " + Database.getInstance().getNumeric(ControlsMap.THROTTLE_Z) + "; Wheel:" + Database.getInstance().getNumeric(ControlsMap.STEERING_WHEEL_X)*90);
+		System.out.println("Constant" + driveConstant);
 		double turn = Database.getInstance().getNumeric(ControlsMap.STEERING_WHEEL_X)*90;
 		double throttle = -Database.getInstance().getNumeric(ControlsMap.THROTTLE_Z);
 		if(Database.getInstance().getConditional(ControlsMap.CONSTANT_BUTTON_INCREASE_KEY)==true)
