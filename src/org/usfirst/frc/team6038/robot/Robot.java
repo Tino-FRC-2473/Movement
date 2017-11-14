@@ -1,29 +1,27 @@
 
 package org.usfirst.frc.team6038.robot;
 
+import java.io.IOException;
+
+import org.usfirst.frc.team6038.framework.components.Devices;
+import org.usfirst.frc.team6038.framework.components.Trackers;
+import org.usfirst.frc.team6038.framework.trackers.EncoderTracker;
+import org.usfirst.frc.team6038.framework.trackers.JoystickTracker;
+import org.usfirst.frc.team6038.framework.trackers.JoystickTracker.JoystickType;
+import org.usfirst.frc.team6038.framework.trackers.NavXTracker;
+import org.usfirst.frc.team6038.framework.trackers.NavXTracker.NavXTarget;
+import org.usfirst.frc.team6038.framework.trackers.TalonTracker;
+import org.usfirst.frc.team6038.framework.trackers.TalonTracker.Target;
+import org.usfirst.frc.team6038.robot.commands.ExampleCommand;
+import org.usfirst.frc.team6038.robot.subsystems.ExampleSubsystem;
+import org.usfirst.frc.team6038.robot.subsystems.PIDriveTrain;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import java.io.IOException;
-
-import org.usfirst.frc.team6038.framework.components.Devices;
-import org.usfirst.frc.team6038.framework.components.Trackers;
-import org.usfirst.frc.team6038.framework.trackers.DeviceTracker.Type;
-import org.usfirst.frc.team6038.framework.trackers.EncoderTracker;
-import org.usfirst.frc.team6038.framework.trackers.JoystickTracker;
-import org.usfirst.frc.team6038.framework.trackers.TalonTracker;
-import org.usfirst.frc.team6038.framework.trackers.TalonTracker.Target;
-import org.usfirst.frc.team6038.framework.trackers.JoystickTracker;
-import org.usfirst.frc.team6038.framework.trackers.NavXTracker;
-import org.usfirst.frc.team6038.framework.trackers.NavXTracker.NavXTarget;
-import org.usfirst.frc.team6038.robot.commands.ExampleCommand;
-import org.usfirst.frc.team6038.robot.subsystems.ExampleSubsystem;
-import org.usfirst.frc.team6038.robot.subsystems.PIDriveTrain;
-import org.usfirst.frc.team6038.framework.trackers.JoystickTracker.JoystickType;
 
 /**
  * The VM is configured to automatically run this class, and to call the

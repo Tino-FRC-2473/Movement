@@ -9,7 +9,9 @@ import java.util.Scanner;
 import org.usfirst.frc.team6038.framework.Database;
 import org.usfirst.frc.team6038.framework.components.Devices;
 import org.usfirst.frc.team6038.framework.components.Trackers;
-
+/*
+ * this is only for networking testing
+ */
 public class Server {
 	public static void main(String[] args) throws IOException {
 		ServerSocket server = new ServerSocket(6968);
