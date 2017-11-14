@@ -25,7 +25,6 @@ public class TestDrive extends Command
 		double turn = Database.getInstance().getNumeric(ControlsMap.STEERING_WHEEL_X)*90;
 		double throttle = -Database.getInstance().getNumeric(ControlsMap.THROTTLE_Z);
 		//TODO
-		//Database.getInstance().getNumeric()
 		if(Database.getInstance().getConditional(ControlsMap.CONSTANT_BUTTON_INCREASE_KEY)==true)
 			driveConstant+=jump;
 		else if(Database.getInstance().getConditional(ControlsMap.CONSTANT_BUTTON_DECREASE_KEY)==true)

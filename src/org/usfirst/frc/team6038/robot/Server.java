@@ -24,10 +24,12 @@ public class Server
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Server Running... ");
 
+		double values[] = getData();
+		
 		while (isRobotRunning)
 		{
 				// Right encoder Left encoder Front Right power Front Left power Throttle Steering wheel
-				p.println(getData()[0]+" "+getData()[1]+" "+getData()[2]+" "+getData()[3]+ " "+getData()[4]+" "+getData()[5]);
+				p.println(values[0]+" "+values[1]+" "+values[2]+" "+values[3]+ " "+values[4]+" "+values[5]);
 		}
 		server.close();
 	}
