@@ -16,6 +16,8 @@ public class DriveCodeClient
 	{
 		String ip = "172.22.11.2"; 
 		int port_number = 6968;
+		boolean sameTrial = true;
+		int trialNumber = 2;
 		File f = new File("data.txt");
 		FileWriter fw1 = new FileWriter(f);
 
@@ -26,14 +28,28 @@ public class DriveCodeClient
 		{
 			String a = scan.nextLine();
 			System.out.println("Socket receiving: " + a);
-			fw1.write(a);
+			
+			if(isRobotMoving())
+			{
+				fw1.write(a);
+				sameTrial = false;
+			}
+			else
+			{
+				if(sameTrial==false)
+				{
+					System.out.println("Trial # " + trialNumber);
+					trialNumber++;
+					sameTrial = true;
+				}
+			}
 		}
 		s.close();
 		scan.close();
 		fw1.close();
 	}
-	
-	
+
+
 	private static boolean isRobotMoving(){
 		boolean frrunning = Database.getInstance().getNumeric("pfr")>0;
 		boolean flrunning = Database.getInstance().getNumeric("pfl")>0;
