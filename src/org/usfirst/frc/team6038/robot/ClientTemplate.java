@@ -2,8 +2,6 @@ package org.usfirst.frc.team6038.robot;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
 

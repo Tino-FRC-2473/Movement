@@ -2,6 +2,7 @@ package org.usfirst.frc.team6038.robot;
 
 import java.io.IOException;
 
+import org.usfirst.frc.team2473.robot.commands.ExampleCommand;
 import org.usfirst.frc.team6038.framework.components.Devices;
 import org.usfirst.frc.team6038.framework.components.Trackers;
 import org.usfirst.frc.team6038.framework.trackers.ButtonTracker;
@@ -12,7 +13,6 @@ import org.usfirst.frc.team6038.framework.trackers.NavXTracker;
 import org.usfirst.frc.team6038.framework.trackers.NavXTracker.NavXTarget;
 import org.usfirst.frc.team6038.framework.trackers.TalonTracker;
 import org.usfirst.frc.team6038.framework.trackers.TalonTracker.Target;
-import org.usfirst.frc.team6038.robot.commands.ExampleCommand;
 import org.usfirst.frc.team6038.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team6038.robot.subsystems.PIDriveTrain;
 
