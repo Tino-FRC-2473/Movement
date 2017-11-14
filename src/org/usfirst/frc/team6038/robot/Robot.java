@@ -1,10 +1,10 @@
-
 package org.usfirst.frc.team6038.robot;
 
 import java.io.IOException;
 
 import org.usfirst.frc.team6038.framework.components.Devices;
 import org.usfirst.frc.team6038.framework.components.Trackers;
+import org.usfirst.frc.team6038.framework.trackers.ButtonTracker;
 import org.usfirst.frc.team6038.framework.trackers.EncoderTracker;
 import org.usfirst.frc.team6038.framework.trackers.JoystickTracker;
 import org.usfirst.frc.team6038.framework.trackers.JoystickTracker.JoystickType;
@@ -34,10 +34,12 @@ public class Robot extends IterativeRobot {
 
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
-	
+
 	public static PIDriveTrain piDriveTrain;
-	
+
 	public static UtilitySocket CVSocket; 
+
+	public static Server server;
 
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
@@ -49,11 +51,14 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
+
 		chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
 		piDriveTrain = new PIDriveTrain();
-		try {
+		try 
+		{
+			server = new Server();
 			CVSocket = new UtilitySocket("Jetson name filler", 5050);//pls change cuz these parameters are fake as fuck
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -67,9 +72,11 @@ public class Robot extends IterativeRobot {
 	 * the robot is disabled.
 	 */
 	@Override
-	public void disabledInit() {
-
+	public void disabledInit() 
+	{
+		server.turnOff();
 	}
+
 
 	@Override
 	public void disabledPeriodic() {
@@ -119,7 +126,7 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
-		
+
 	}
 
 	/**
@@ -137,17 +144,17 @@ public class Robot extends IterativeRobot {
 	public void testPeriodic() {
 		LiveWindow.run();
 	}
-	
+
 	private static void addDevices(){
 		Devices.getInstance().addTalon(RobotMap.BACK_RIGHT);
 		Devices.getInstance().addTalon(RobotMap.BACK_LEFT);
 		Devices.getInstance().addTalon(RobotMap.FRONT_LEFT);
 		Devices.getInstance().addTalon(RobotMap.FRONT_RIGHT);
 	}
-	
+
 	private static void addTrackers(){
-//		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.BACK_RIGHT_ENC, RobotMap.BACK_RIGHT));
-//		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.BACK_LEFT_ENC, RobotMap.BACK_LEFT));
+		//		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.BACK_RIGHT_ENC, RobotMap.BACK_RIGHT));
+		//		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.BACK_LEFT_ENC, RobotMap.BACK_LEFT));
 		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.FRONT_RIGHT_ENC, RobotMap.FRONT_RIGHT));
 		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.FRONT_LEFT_ENC, RobotMap.FRONT_LEFT));
 		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_Z,ControlsMap.THROTTLE, JoystickType.THROTTLE));
@@ -158,5 +165,7 @@ public class Robot extends IterativeRobot {
 		Trackers.getInstance().addTracker(new NavXTracker(RobotMap.GYRO_YAW, NavXTarget.YAW));
 		Trackers.getInstance().addTracker(new NavXTracker(RobotMap.GYRO_RATE, NavXTarget.RATE));
 		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_KEY, ControlsMap.THROTTLE, JoystickType.Z));
+		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON_INCREASE_KEY, 1,4));
+		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON_DECREASE_KEY, 1,2));
 	}
 }

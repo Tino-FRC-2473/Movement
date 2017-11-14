@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.command.Command;
  * This is Plan C
  */
 public class MakeshiftTurn extends Command {
-
 	private final double diffCap = 0.3;
 	private final double skiddingScale = 0.1;
 	private final double throttleScale = 0.15;
