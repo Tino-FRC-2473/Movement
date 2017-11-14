@@ -25,7 +25,7 @@ public class DriveCodeClient
 		while (scan.hasNextLine()) 
 		{
 			String a = scan.nextLine();
-			System.out.println(a);
+			System.out.println("Socket receiving: " + a);
 			fw1.write(a);
 		}
 		s.close();

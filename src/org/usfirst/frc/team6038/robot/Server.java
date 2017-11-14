@@ -49,6 +49,4 @@ public class Server
 	{
 		isRobotRunning = false;
 	}
-
->>>>>>> branch '2018' of https://github.com/Tino-FRC-2473/Movement.git
 }
