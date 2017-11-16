@@ -16,8 +16,8 @@ public class PIDriveTrain extends PIDSubsystem {
 
 	// KP, KI, and KD values used for PID
 	private static final double KP = 0.0035;
-	private static final double KI = 0; //0.000035;
-	private static final double KD = 0; //0.001;
+	private static final double KI = 0.000035; //0.000035;
+	private static final double KD = 0.001; //0.001;
 
 	private RobotDrive driver;
 
