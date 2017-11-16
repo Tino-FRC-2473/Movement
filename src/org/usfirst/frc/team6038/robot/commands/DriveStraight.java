@@ -27,19 +27,15 @@ public class DriveStraight extends Command {
 	private final double speedMaxThreshold = 15; // the threshold determining the max pow while turning
 	private final double powCapMod = 0.7; // the modifier for reducing the power while turning
 	
+	private float angle = 0;
+	private double encoders = 0;
+	
 	private File data;
 	private FileWriter fw;
-	public DriveStraight() {
+	public DriveStraight(double encoders) {
 		requires(Robot.piDriveTrain);
-//		data = new File("data.txt");
-//		if (data.exists())
-//			System.out.println("Now recording data.");
-//		try {
-//			fw = new FileWriter(data);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		angle = Devices.getInstance().getNavXGyro().getYaw();
+		this.encoders = encoders; 
 	}
 
 	@Override
@@ -49,13 +45,8 @@ public class DriveStraight extends Command {
 
 	@Override
 	protected void execute() {
-		Robot.piDriveTrain.setTargetAngle(Database.getInstance().getNumeric(ControlsMap.STEERING_WHEEL_X)*90);
-		double testAngle = Database.getInstance().getNumeric(ControlsMap.STEERING_WHEEL_X)*90;
-		System.out.println(testAngle);
-//		Devices.getInstance().getTalon(RobotMap.BACK_LEFT).set(0.5);
-//		Robot.piDriveTrain.drive(squareWithSign(Database.getInstance().getNumeric(ControlsMap.THROTTLE_Z)),Robot.piDriveTrain.getAngleRate());
+		Robot.piDriveTrain.setTargetAngle(angle);
 		this.turn(Database.getInstance().getNumeric(ControlsMap.THROTTLE_Z), Robot.piDriveTrain.getAngleRate());
-
 	}
 
 	private double squareWithSign(double d) {
@@ -74,7 +65,6 @@ public class DriveStraight extends Command {
 		}
 		
 		if (Math.abs(pow) > throttleDeadzone) {
-//			record(pow, turn, Database.getInstance().getNumeric(key));
 			double approxSpeed = getApproxSpeed(pow, turn); // the approximated speed in meters per second
 			approxSpeed = this.cap(approxSpeed, turn);
 			approxSpeed = approxSpeed / powToSpeedRatio;
@@ -154,13 +144,16 @@ public class DriveStraight extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return false;
+		return ((Database.getInstance().getNumeric(RobotMap.FRONT_RIGHT_ENC) + Database.getInstance().getNumeric(RobotMap.FRONT_LEFT_ENC))/2)<=encoders;
 	}
 
 	@Override
 	protected void end() {
 		Robot.piDriveTrain.disable();
 		Devices.getInstance().getTalon(RobotMap.BACK_LEFT).set(0);
+		Devices.getInstance().getTalon(RobotMap.BACK_RIGHT).set(0);
+		Devices.getInstance().getTalon(RobotMap.FRONT_RIGHT).set(0);
+		Devices.getInstance().getTalon(RobotMap.FRONT_LEFT).set(0);
 		System.out.println("DriveStraight ended. :)");
 	}
 

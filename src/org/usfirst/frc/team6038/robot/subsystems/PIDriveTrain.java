@@ -44,7 +44,7 @@ public class PIDriveTrain extends PIDSubsystem {
 	}
 
 	public void initDefaultCommand() {
-		setDefaultCommand(new DriveStraight());
+		setDefaultCommand(new DriveStraight(1000));
 	}
 
 	/**
