@@ -30,7 +30,7 @@ public class Server
 		while (isRobotRunning)
 		{
 				// Right encoder Left encoder Front Right power Front Left power Throttle Steering wheel
-				p.print("enR: "+values[0]+"; enL:"+values[1]+"; pR: "+values[2]+"; pE: "+values[3]+ "; Th: "+values[4]+"; Wh: "+values[5]+" GY" + values[6]);
+				p.print(values[0] + values[1] + values[2] + values[3] + values[4] + values[5] + values[6]);
 				p.println();
 		}
 		server.close();

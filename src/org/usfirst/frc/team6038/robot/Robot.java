@@ -14,6 +14,7 @@ import org.usfirst.frc.team6038.framework.trackers.NavXTracker.NavXTarget;
 import org.usfirst.frc.team6038.framework.trackers.TalonTracker;
 import org.usfirst.frc.team6038.framework.trackers.TalonTracker.Target;
 import org.usfirst.frc.team6038.robot.commands.DriveStraight;
+import org.usfirst.frc.team6038.robot.commands.TestDrive;
 import org.usfirst.frc.team6038.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team6038.robot.subsystems.PIDriveTrain;
 
@@ -43,6 +44,7 @@ public class Robot extends IterativeRobot {
 	public static Server server;
 
 	Command autonomousCommand;
+	Command teleopCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 
 	/**
@@ -57,6 +59,7 @@ public class Robot extends IterativeRobot {
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
 		piDriveTrain = new PIDriveTrain();
+		teleopCommand = new TestDrive();
 		try 
 		{
 			server = new Server();
