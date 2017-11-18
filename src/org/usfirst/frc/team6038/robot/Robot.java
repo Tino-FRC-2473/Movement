@@ -59,6 +59,8 @@ public class Robot extends IterativeRobot {
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
 		piDriveTrain = new PIDriveTrain();
+		Robot.addDevices();
+		Robot.addTrackers();
 		teleopCommand = new TestDrive();
 		try 
 		{
@@ -101,7 +103,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		piDriveTrain.enable();
-		autonomousCommand = new DriveStraight(1000);
+		autonomousCommand = new DriveStraight(6000);
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand

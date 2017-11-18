@@ -12,7 +12,7 @@ public class DriveCodeClient
 
 	public static void main(String[] args) throws IOException 
 	{
-		String ip = "172.22.11.2"; 
+		String ip = "10.24.73.2"; 
 		int port_number = 6968;
 		boolean sameTrial = true;
 		int trialNumber = 2;

@@ -20,15 +20,21 @@ public class TestDrive extends Command
 	
 	@Override
 	protected void execute() 
-	{
-		System.out.print("Throttle: " + Database.getInstance().getNumeric(ControlsMap.THROTTLE_Z) + "; Wheel:" + Database.getInstance().getNumeric(ControlsMap.STEERING_WHEEL_X)*90);
-		System.out.println("Constant" + driveConstant);
+	{		
+		// retrieves control values
 		double turn = Database.getInstance().getNumeric(ControlsMap.STEERING_WHEEL_X)*90;
 		double throttle = -Database.getInstance().getNumeric(ControlsMap.THROTTLE_Z);
-		if(Database.getInstance().getConditional(ControlsMap.CONSTANT_BUTTON_INCREASE_KEY)==true)
-			driveConstant+=jump;
-		else if(Database.getInstance().getConditional(ControlsMap.CONSTANT_BUTTON_DECREASE_KEY)==true)
-			driveConstant-=jump;
+		
+		// determines is the constant is increased or decreased
+		if(Database.getInstance().getConditional(ControlsMap.CONSTANT_BUTTON_INCREASE_KEY))
+			driveConstant += jump;
+		else if(Database.getInstance().getConditional(ControlsMap.CONSTANT_BUTTON_DECREASE_KEY))
+			driveConstant -= jump;
+		
+		// check the constant value for TESTING 
+			System.out.println("Constant Value: " + driveConstant);
+		
+		// calls drive code command
 		test(throttle, turn);
 	}
 

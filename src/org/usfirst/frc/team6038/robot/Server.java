@@ -4,10 +4,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 
 import org.usfirst.frc.team6038.framework.Database;
-import org.usfirst.frc.team6038.robot.commands.TestDrive;
 
 public class Server 
 {
@@ -21,8 +19,6 @@ public class Server
 		Socket ss = server.accept();
 		System.out.println("Server accepting");
 		PrintStream p = new PrintStream(ss.getOutputStream());
-		System.out.println("Printstream established");
-		Scanner sc = new Scanner(System.in);
 		System.out.println("Server Running... ");
 
 		double values[] = getData();
