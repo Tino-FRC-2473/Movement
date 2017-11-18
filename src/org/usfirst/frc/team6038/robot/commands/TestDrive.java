@@ -69,7 +69,7 @@ public class TestDrive extends Command
 	
 	public static void changeConstant(int num)
 	{
-		driveConstant+=num;
+		driveConstant += num;
 	}
 	
 	@Override

@@ -65,7 +65,7 @@ public class Robot extends IterativeRobot {
 		try 
 		{
 			server = new Server();
-			CVSocket = new UtilitySocket("Jetson name filler", 5050);//pls change cuz these parameters are fake as fuck
+			CVSocket = new UtilitySocket("Jetson name filler", 5050);//pls change cuz these parameters are fake af
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
