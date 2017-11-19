@@ -18,6 +18,8 @@ public class RobotMap {
 	public static final int MOTOR = 6;
 	public static final int SERVO = 0;
 	public static final int GYRO = 0;
+	
+	public static final String NO_TRIALS = "NA";
 
 	//keys
 	public static final String MOTOR_ENCODER_KEY = "encoder key";

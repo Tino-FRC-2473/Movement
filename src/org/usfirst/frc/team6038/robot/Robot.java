@@ -1,6 +1,7 @@
 package org.usfirst.frc.team6038.robot;
 
 import java.io.IOException;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import org.usfirst.frc.team2473.robot.commands.ExampleCommand;
 import org.usfirst.frc.team6038.framework.components.Devices;
@@ -42,6 +43,8 @@ public class Robot extends IterativeRobot {
 	public static UtilitySocket CVSocket; 
 
 	public static Server server;
+	
+	public static ArrayBlockingQueue<String> tempData;
 
 	Command autonomousCommand;
 	Command teleopCommand;
@@ -54,7 +57,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
-
+		tempData = new ArrayBlockingQueue<String>(20);
 		chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
@@ -64,8 +67,8 @@ public class Robot extends IterativeRobot {
 		teleopCommand = new TestDrive();
 		try 
 		{
-			server = new Server();
-			CVSocket = new UtilitySocket("Jetson name filler", 5050);//pls change cuz these parameters are fake af
+			server = new Server(6969);
+			//CVSocket = new UtilitySocket("Jetson name filler", 5050);//pls change cuz these parameters are fake af
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -80,7 +83,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledInit() 
 	{
-		server.turnOff();
 	}
 
 
@@ -150,6 +152,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		try {
+			server.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		LiveWindow.run();
 	}
 

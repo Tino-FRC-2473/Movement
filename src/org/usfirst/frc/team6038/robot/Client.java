@@ -7,13 +7,13 @@ import java.util.Scanner;
 
 import org.usfirst.frc.team6038.framework.Database;
 
-public class DriveCodeClient 
+public class Client 
 {
 
 	public static void main(String[] args) throws IOException 
 	{
 		String ip = "10.24.73.2"; 
-		int port_number = 6968;
+		int port_number = 6969;
 		boolean sameTrial = true;
 		int trialNumber = 2;
 		File f = new File("data.txt");
@@ -27,12 +27,10 @@ public class DriveCodeClient
 			String a = scan.nextLine();
 			System.out.println("Socket receiving: " + a);
 			
-			if(isRobotMoving())
-			{
+			if(!a.equals(RobotMap.NO_TRIALS)){
 				fw1.write(a);
 				sameTrial = false;
-			}
-			else
+			}else
 			{
 				if(sameTrial==false)
 				{
@@ -45,15 +43,6 @@ public class DriveCodeClient
 		s.close();
 		scan.close();
 		fw1.close();
-	}
-
-
-	private static boolean isRobotMoving(){
-		boolean frrunning = Database.getInstance().getNumeric("pfr")>0;
-		boolean flrunning = Database.getInstance().getNumeric("pfl")>0;
-		boolean brrunning = Database.getInstance().getNumeric("pbr")>0;
-		boolean blrunning = Database.getInstance().getNumeric("pbl")>0;
-		return frrunning||flrunning||brrunning||blrunning;
 	}
 }
 
