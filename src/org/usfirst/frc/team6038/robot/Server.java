@@ -20,7 +20,6 @@ public class Server
 		ss = server.accept();
 		System.out.println("Server accepting");
 		p = new PrintStream(ss.getOutputStream(), false);
-		Robot.tempData = new ArrayBlockingQueue<String>(6);
 		System.out.println("Server Running... ");
 		FlusherThread flusher = new FlusherThread(p);
 		flusher.start();

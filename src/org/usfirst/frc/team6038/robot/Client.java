@@ -13,7 +13,7 @@ public class Client
 	public static void main(String[] args) throws IOException 
 	{
 		String ip = "10.24.73.2"; 
-		int port_number = 6969;
+		int port_number = 1939;
 		boolean sameTrial = true;
 		int trialNumber = 2;
 		File f = new File("data.txt");

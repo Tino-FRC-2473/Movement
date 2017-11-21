@@ -35,34 +35,38 @@ public class TestDrive extends Command
 			driveConstant -= jump;
 		
 		// check the constant value for TESTING 
-			System.out.println("Constant Value: " + driveConstant);
+//		System.out.println("Constant Value: " + driveConstant);
+		System.out.println("Turn: " + turn);
+		System.out.println("Throttle: " + throttle);
 		
 		// calls drive code command
 		test(throttle, turn);
 	}
 
-	private void test(double pow, double turn) 
+	private void test(double throttle, double turn) 
 	{
 		double diff = turn * driveConstant;
-		if (pow > 0) {
-			setLeftPow(pow + diff); 
-			setRightPow(pow - diff); 
-		} else if (pow < 0) {
-			setLeftPow(pow - diff);
-			setRightPow(pow + diff);
+		if (throttle > 0) {
+			setLeftPow(throttle + diff); 
+			setRightPow(throttle - diff); 
+		} else if (throttle < 0) {
+			setLeftPow(throttle - diff);
+			setRightPow(throttle + diff);
 		}
 	}
 	
 	private void setRightPow(double pow) {
-		Devices.getInstance().getTalon(RobotMap.FRONT_RIGHT).set(-pow);
-		Devices.getInstance().getTalon(RobotMap.BACK_RIGHT).set(-pow);
-
+		if (-pow <= 1 || -pow >= -1) {
+			Devices.getInstance().getTalon(RobotMap.FRONT_RIGHT).set(-pow);
+			Devices.getInstance().getTalon(RobotMap.BACK_RIGHT).set(-pow);
+		}
 	}
 
 	private void setLeftPow(double pow) {
-		Devices.getInstance().getTalon(RobotMap.FRONT_LEFT).set(pow);
-		Devices.getInstance().getTalon(RobotMap.BACK_LEFT).set(pow);
-
+		if (pow <= 1 || pow >= -1) {
+			Devices.getInstance().getTalon(RobotMap.FRONT_LEFT).set(pow);
+			Devices.getInstance().getTalon(RobotMap.BACK_LEFT).set(pow);
+		}
 	}
 
 	@Override

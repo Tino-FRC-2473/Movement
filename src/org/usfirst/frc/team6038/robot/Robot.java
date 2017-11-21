@@ -6,6 +6,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import org.usfirst.frc.team2473.robot.commands.ExampleCommand;
 import org.usfirst.frc.team6038.framework.components.Devices;
 import org.usfirst.frc.team6038.framework.components.Trackers;
+import org.usfirst.frc.team6038.framework.readers.ControlsReader;
+import org.usfirst.frc.team6038.framework.readers.DeviceReader;
 import org.usfirst.frc.team6038.framework.trackers.ButtonTracker;
 import org.usfirst.frc.team6038.framework.trackers.EncoderTracker;
 import org.usfirst.frc.team6038.framework.trackers.JoystickTracker;
@@ -45,6 +47,8 @@ public class Robot extends IterativeRobot {
 	public static Server server;
 	
 	public static ArrayBlockingQueue<String> tempData;
+	
+	public static DeviceReader deviceReader;
 
 	Command autonomousCommand;
 	Command teleopCommand;
@@ -56,18 +60,21 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+		Robot.addDevices();
+		Robot.addTrackers();
+		deviceReader = new DeviceReader();
+		deviceReader.start();
+		ControlsReader.getInstance().init();
 		oi = new OI();
-		tempData = new ArrayBlockingQueue<String>(20);
+		tempData = new ArrayBlockingQueue<String>(25);
 		chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
 		piDriveTrain = new PIDriveTrain();
-		Robot.addDevices();
-		Robot.addTrackers();
 		teleopCommand = new TestDrive();
 		try 
 		{
-			server = new Server(6969);
+			server = new Server(1939);
 			//CVSocket = new UtilitySocket("Jetson name filler", 5050);//pls change cuz these parameters are fake af
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -105,7 +112,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		piDriveTrain.enable();
-		autonomousCommand = new DriveStraight(6000);
+//		autonomousCommand = new DriveStraight(6000); TODO 
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -136,7 +143,7 @@ public class Robot extends IterativeRobot {
 			autonomousCommand.cancel();
 			piDriveTrain.disable();
 		}
-
+		teleopCommand.start();
 	}
 
 	/**
@@ -170,9 +177,10 @@ public class Robot extends IterativeRobot {
 	private static void addTrackers(){
 		//		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.BACK_RIGHT_ENC, RobotMap.BACK_RIGHT));
 		//		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.BACK_LEFT_ENC, RobotMap.BACK_LEFT));
+		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.STEERING_WHEEL_X,ControlsMap.STEERING_WHEEL,JoystickType.X));
 		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.FRONT_RIGHT_ENC, RobotMap.FRONT_RIGHT));
 		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.FRONT_LEFT_ENC, RobotMap.FRONT_LEFT));
-		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_Z,ControlsMap.THROTTLE, JoystickType.THROTTLE));
+		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_Z,ControlsMap.THROTTLE, JoystickType.Z));
 		Trackers.getInstance().addTracker(new TalonTracker("pfr",RobotMap.FRONT_RIGHT,Target.POWER));
 		Trackers.getInstance().addTracker(new TalonTracker("pfl",RobotMap.FRONT_LEFT,Target.POWER));
 		Trackers.getInstance().addTracker(new TalonTracker("pbr",RobotMap.BACK_RIGHT,Target.POWER));

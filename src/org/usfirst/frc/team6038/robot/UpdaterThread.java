@@ -30,19 +30,31 @@ public class UpdaterThread extends Thread {
 
 	@Override
 	public void run() {
-		while(alive) {
+		while (true) {
 			try {
 				double value[];
 				String str;
-				if(isRobotMoving()){
-					value = getData();
-					str = "";
-					for (Double v : value) {
-						str += (v + " ");
-					}
-				}else{
+//				if (isRobotMoving())
+//					alive = true;
+//				else 
+//					alive = false;
+				if (!isRobotMoving()) {
 					str = RobotMap.NO_TRIALS;
+//					alive = false;
+					Thread.sleep(10);
 				}
+					
+				while (!isRobotMoving()) {
+					Thread.sleep(10);
+					Robot.tempData.add("");
+				}
+				
+				value = getData();
+				str = "";
+				for (Double v : value) {
+					str += (v + " ");
+				}
+					
 				//System.out.println("Updater added - " + str);
 				//System.out.println("Size: " + Robot.tempData.size());
 				Robot.tempData.add(str);
