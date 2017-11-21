@@ -37,7 +37,7 @@ public class UpdaterThread extends Thread {
 				if(isRobotMoving()){
 					value = getData();
 					str = "";
-					for (Double v : value) { 
+					for (Double v : value) {
 						str += (v + " ");
 					}
 				}else{
