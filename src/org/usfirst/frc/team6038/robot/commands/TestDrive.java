@@ -13,6 +13,9 @@ public class TestDrive extends Command
 	public static double driveConstant = 0.5;
 	private final double jump = 0.05;
 	
+	private double turn;
+	private double throttle;
+	
 	public TestDrive() 
 	{
 		requires(Robot.piDriveTrain);
@@ -22,8 +25,8 @@ public class TestDrive extends Command
 	protected void execute() 
 	{		
 		// retrieves control values
-		double turn = Database.getInstance().getNumeric(ControlsMap.STEERING_WHEEL_X)*90;
-		double throttle = -Database.getInstance().getNumeric(ControlsMap.THROTTLE_Z);
+		turn = Database.getInstance().getNumeric(ControlsMap.STEERING_WHEEL_X)*90;
+		throttle = -Database.getInstance().getNumeric(ControlsMap.THROTTLE_Z);
 		
 		// determines is the constant is increased or decreased
 		if(Database.getInstance().getConditional(ControlsMap.CONSTANT_BUTTON_INCREASE_KEY))

@@ -180,8 +180,7 @@ public class Robot extends IterativeRobot {
 		Trackers.getInstance().addTracker(new NavXTracker(RobotMap.GYRO_YAW, NavXTarget.YAW));
 		Trackers.getInstance().addTracker(new NavXTracker(RobotMap.GYRO_RATE, NavXTarget.RATE));
 		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_KEY, ControlsMap.THROTTLE, JoystickType.Z));
-//		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON_INCREASE_KEY, 1,4));
-//		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON_DECREASE_KEY, 1,2));
-		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON, 1,3));
+		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON_DECREASE_KEY, ControlsMap.THROTTLE, ControlsMap.CONSTANT_BUTTON_DECREASE_NUMBER));
+		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON_INCREASE_KEY, ControlsMap.THROTTLE, ControlsMap.CONSTANT_BUTTON_INCREASE_NUMBER));
 	}
 }
