@@ -12,8 +12,6 @@ public class Server
 	private PrintStream p;
 	private Socket ss;
 	private ServerSocket server;
-	private ArrayBlockingQueue<String> tempdata;
-	private String[] tempArray;
 	
 	public Server(int port) throws IOException
 	{
@@ -22,7 +20,7 @@ public class Server
 		ss = server.accept();
 		System.out.println("Server accepting");
 		p = new PrintStream(ss.getOutputStream(), false);
-		tempdata = new ArrayBlockingQueue<String>(6);
+		Robot.tempData = new ArrayBlockingQueue<String>(6);
 		System.out.println("Server Running... ");
 		FlusherThread flusher = new FlusherThread(p);
 		flusher.start();
