@@ -51,8 +51,8 @@ public class UpdaterThread extends Thread {
 				
 				value = getData();
 				str = "";
-				for (Double v : value) {
-					str += (v + " ");
+				for (double v : value) {
+					str += (roundTo(v, 2) + " ");
 				}
 					
 				//System.out.println("Updater added - " + str);
@@ -64,6 +64,13 @@ public class UpdaterThread extends Thread {
 			}
 
 		}
+	}
+	
+	private double roundTo(double val, int decimals) {
+		double a = Math.pow(10,decimals);
+		double newVal;
+		newVal = Math.round(val * a) / a;
+		return newVal;
 	}
 	
 	private static boolean isRobotMoving(){

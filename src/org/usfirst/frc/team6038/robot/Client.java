@@ -16,7 +16,7 @@ public class Client
 		int port_number = 1939;
 		int trialNumber = 2;
 		File f = new File("data.txt");
-		FileWriter fw1 = new FileWriter(f,false);
+		FileWriter fw1 = new FileWriter(f, false);
 
 		Socket s = new Socket(ip, port_number);
 		Scanner scan = new Scanner(s.getInputStream());
@@ -25,10 +25,9 @@ public class Client
 		{
 			String a = scan.nextLine();
 			System.out.println("Socket receiving: " + a);
-
-			if(!a.equals(RobotMap.NO_TRIALS))
-			{
-				fw1.write(a + "\n");
+			
+			if(!a.equals(RobotMap.NO_TRIALS)){
+				fw1.write(a+"\n");
 			}
 			else
 			{
