@@ -14,10 +14,9 @@ public class Client
 	{
 		String ip = "10.24.73.2"; 
 		int port_number = 1939;
-		boolean sameTrial = true;
 		int trialNumber = 2;
 		File f = new File("data.txt");
-		FileWriter fw1 = new FileWriter(f);
+		FileWriter fw1 = new FileWriter(f, false);
 
 		Socket s = new Socket(ip, port_number);
 		Scanner scan = new Scanner(s.getInputStream());
@@ -29,15 +28,11 @@ public class Client
 			
 			if(!a.equals(RobotMap.NO_TRIALS)){
 				fw1.write(a);
-				sameTrial = false;
-			}else
+			}
+			else
 			{
-				if(sameTrial==false)
-				{
-					System.out.println("Trial # " + trialNumber);
-					trialNumber++;
-					sameTrial = true;
-				}
+				fw1.write("Trial " + trialNumber);
+				trialNumber++;
 			}
 		}
 		s.close();
