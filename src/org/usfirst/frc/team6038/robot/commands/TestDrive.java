@@ -27,7 +27,7 @@ public class TestDrive extends Command
 	{		
 		// retrieves control values
 		turn = Database.getInstance().getNumeric(ControlsMap.STEERING_WHEEL_X);
-		throttle = -Database.getInstance().getNumeric(ControlsMap.THROTTLE_Z);
+		throttle = Database.getInstance().getNumeric(ControlsMap.THROTTLE_Z);
 		
 		// determines is the constant is increased or decreased
 		if(Database.getInstance().getConditional(ControlsMap.CONSTANT_BUTTON_INCREASE_KEY))
