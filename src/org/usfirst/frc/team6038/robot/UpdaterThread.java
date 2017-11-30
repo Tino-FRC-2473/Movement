@@ -39,12 +39,13 @@ public class UpdaterThread extends Thread {
 //				else 
 //					alive = false;
 				if (!isRobotMoving()) {
-					str = RobotMap.NO_TRIALS;
+					Robot.tempData.add(RobotMap.NO_TRIALS);
 //					alive = false;
 					Thread.sleep(10);
 				}
 					
-				while (!isRobotMoving()) {
+				while (!isRobotMoving()) 
+				{
 					Thread.sleep(10);
 					Robot.tempData.add("");
 				}
