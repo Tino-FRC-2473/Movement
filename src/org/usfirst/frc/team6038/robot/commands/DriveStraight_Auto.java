@@ -43,8 +43,16 @@ public class DriveStraight_Auto extends Command {
 
 	@Override
 	protected void initialize() {
+		resetEncoders();
 		Robot.piDriveTrain.enable();
 		Robot.piDriveTrain.setTargetAngle(Database.getInstance().getNumeric(RobotMap.GYRO_YAW));
+	}
+
+	private void resetEncoders() {
+		Devices.getInstance().getTalon(2).reset();
+		Devices.getInstance().getTalon(3).reset();
+		Devices.getInstance().getTalon(4).reset();
+		Devices.getInstance().getTalon(5).reset();
 	}
 
 	@Override
