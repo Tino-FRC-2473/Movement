@@ -27,19 +27,11 @@ public class Client
 			System.out.println("Socket receiving: " + a);
 			
 			if(!a.equals(RobotMap.NO_TRIALS)){
-<<<<<<< HEAD
-				fw1.write(a + "\n");
-			}
-			else
-			{
-				fw1.write("Trial " + trialNumber + "\n");
-=======
 				fw1.write(a+"\n");
 			}
 			else
 			{
 				System.out.println("Trial " + trialNumber + "\n");
->>>>>>> 228f67c5c48bc14aa493626d0a23d898af1c3357
 				trialNumber++;
 			}
 		}

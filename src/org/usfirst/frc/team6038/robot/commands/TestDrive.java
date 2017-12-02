@@ -39,6 +39,7 @@ public class TestDrive extends Command
 //		System.out.println("Constant Value: " + driveConstant);
 		System.out.println("Turn: " + turn);
 		System.out.println("Throttle: " + throttle * 90);
+		System.out.println("Constant: " + driveConstant);
 		
 		// calls drive code command
 		test(throttle, turn);

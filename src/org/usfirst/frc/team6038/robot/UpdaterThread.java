@@ -55,6 +55,7 @@ public class UpdaterThread extends Thread {
 				for (double v : value) {
 					str += (roundTo(v, 2) + " ");
 				}
+				System.out.println(str);
 					
 				//System.out.println("Updater added - " + str);
 				//System.out.println("Size: " + Robot.tempData.size());
