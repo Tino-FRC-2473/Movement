@@ -26,13 +26,17 @@ public class Client
 			String a = scan.nextLine();
 			System.out.println("Socket receiving: " + a);
 			
-			if(!a.equals(RobotMap.NO_TRIALS)){
+			if(!a.equals(RobotMap.NO_TRIALS))
+			{
 				fw1.write(a+"\n");
 			}
 			else
 			{
+				
 				System.out.println("Trial " + trialNumber + "\n");
 				trialNumber++;
+
+				fw1.write("Trial"+trialNumber+"\n");
 			}
 		}
 		s.close();
