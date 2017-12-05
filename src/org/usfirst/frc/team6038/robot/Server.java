@@ -4,26 +4,26 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ArrayBlockingQueue;
-import org.usfirst.frc.team6038.framework.Database;
 
 public class Server 
 {
 	private PrintStream p;
 	private Socket ss;
-	private ServerSocket server;
+	private ServerSocket serverSocket;
+	private FlusherThread flusher;
+	private UpdaterThread updater;
 	
 	public Server(int port) throws IOException
 	{
-		server = new ServerSocket(port);
+		serverSocket = new ServerSocket(port);
 		System.out.println("Server socket established");
-		ss = server.accept();
+		ss = serverSocket.accept();
 		System.out.println("Server accepting");
 		p = new PrintStream(ss.getOutputStream(), false);
 		System.out.println("Server Running... ");
-		FlusherThread flusher = new FlusherThread(p);
+		flusher = new FlusherThread(p);
 		flusher.start();
-		UpdaterThread updater = new UpdaterThread();
+		updater = new UpdaterThread();
 		updater.start();
 	}
 
@@ -41,9 +41,16 @@ public class Server
 //				};
 //	}
 	
-	public void close() throws IOException
+	public void closeServer()
 	{
 		p.flush();
-		server.close();
+		try {
+			serverSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		flusher.endFlusher();
+		updater.endUpdater();
 	}
 }

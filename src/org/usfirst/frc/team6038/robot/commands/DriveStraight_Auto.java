@@ -1,14 +1,11 @@
 package org.usfirst.frc.team6038.robot.commands;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import org.usfirst.frc.team6038.framework.Database;
 import org.usfirst.frc.team6038.framework.components.Devices;
-import org.usfirst.frc.team6038.robot.ControlsMap;
 import org.usfirst.frc.team6038.robot.Robot;
 import org.usfirst.frc.team6038.robot.RobotMap;
+
+import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -45,21 +42,28 @@ public class DriveStraight_Auto extends Command {
 	protected void initialize() {
 		resetEncoders();
 		Robot.piDriveTrain.enable();
+		Devices.getInstance().getNavXGyro().zeroYaw();
 		Robot.piDriveTrain.setTargetAngle(Database.getInstance().getNumeric(RobotMap.GYRO_YAW));
 	}
 
 	private void resetEncoders() {
-		Devices.getInstance().getTalon(2).reset();
-		Devices.getInstance().getTalon(3).reset();
-		Devices.getInstance().getTalon(4).reset();
-		Devices.getInstance().getTalon(5).reset();
+		resetOneEncoder(RobotMap.FRONT_LEFT);
+		resetOneEncoder(RobotMap.FRONT_RIGHT);
+		resetOneEncoder(RobotMap.BACK_LEFT);
+		resetOneEncoder(RobotMap.BACK_RIGHT);
+	}
+	
+	private void resetOneEncoder(int talonId) {
+		Devices.getInstance().getTalon(talonId).changeControlMode(TalonControlMode.Position);
+		Devices.getInstance().getTalon(talonId).setPosition(0);
+		Devices.getInstance().getTalon(talonId).changeControlMode(TalonControlMode.PercentVbus);
 	}
 
 	@Override
 	protected void execute() {
 		Robot.piDriveTrain.drive(power, Robot.piDriveTrain.getAngleRate());
 	}
-
+	
 	private double squareWithSign(double d) {
 		if (d >= 0.04) {
 			return -d * d;
@@ -155,7 +159,7 @@ public class DriveStraight_Auto extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return ((Database.getInstance().getNumeric(RobotMap.FRONT_RIGHT_ENC) + Database.getInstance().getNumeric(RobotMap.FRONT_LEFT_ENC))/2)<=encoder;
+		return ((Math.abs(Database.getInstance().getNumeric(RobotMap.FRONT_RIGHT_ENC)) + Math.abs(Database.getInstance().getNumeric(RobotMap.FRONT_LEFT_ENC)))/2) >= encoder;
 	}
 
 	@Override
