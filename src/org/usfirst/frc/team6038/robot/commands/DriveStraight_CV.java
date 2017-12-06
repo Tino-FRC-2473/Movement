@@ -39,8 +39,9 @@ public class DriveStraight_CV extends Command {
 	//cv stuff
 	private double distance = 0;
 	private double CVangle = 0;
-	private static int MAX_DISTANCE = 0; //not sure what unit the distance is in
-	private static int DISTANCE_TOLERANCE = 0; //an amount of distance that is close enough to zero
+	private final int MAX_DISTANCE = 0; //not sure what unit the distance is in
+	private final int DISTANCE_TOLERANCE = 0; //an amount of distance that is close enough to zero
+	private double initialDistance = 0;
 	
 	public DriveStraight_CV() {
 		Thread cv = new Thread() {
@@ -54,6 +55,7 @@ public class DriveStraight_CV extends Command {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				initialDistance = in.nextDouble();
 				while(isAlive && in.hasNextLine()) {
 					distance = in.nextDouble();
 					CVangle = in.nextDouble();
@@ -88,7 +90,7 @@ public class DriveStraight_CV extends Command {
 	protected void execute() {
 		if((CVangle<=180&&CVangle>=-180) && (distance<=MAX_DISTANCE&&distance>=0)) {
 			Robot.piDriveTrain.setTargetAngle(CVangle);
-			double pow = distance/MAX_DISTANCE;
+			double pow = distance/initialDistance;
 			if(Math.abs(pow) >= maxPow) {
 				pow = maxPow*Math.signum(pow);
 			}
