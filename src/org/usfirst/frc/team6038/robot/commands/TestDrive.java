@@ -13,6 +13,8 @@ public class TestDrive extends Command
 	public static double driveConstant = 0.5;
 	private final double jump = 0.05;
 	private final double cap = 0.8;
+	private boolean increaseButtonPressed = false;
+	private boolean decreaseButtonPressed = false;
 	
 	private double turn;
 	private double throttle;
@@ -30,15 +32,28 @@ public class TestDrive extends Command
 		throttle = Database.getInstance().getNumeric(ControlsMap.THROTTLE_Z);
 		
 		// determines is the constant is increased or decreased
-		if(Database.getInstance().getConditional(ControlsMap.CONSTANT_BUTTON_INCREASE_KEY))
-			driveConstant += jump;
-		else if(Database.getInstance().getConditional(ControlsMap.CONSTANT_BUTTON_DECREASE_KEY))
-			driveConstant -= jump;
-		
+		if(Database.getInstance().getConditional(ControlsMap.CONSTANT_BUTTON_INCREASE_KEY)) {
+			increaseButtonPressed = true;
+		} else if(Database.getInstance().getConditional(ControlsMap.CONSTANT_BUTTON_DECREASE_KEY)) {
+			decreaseButtonPressed = true;
+		} else {
+			// determines if the button is just released so that only one increment/decrement
+			// goes into effect
+			if (increaseButtonPressed) {
+				driveConstant += jump;
+				increaseButtonPressed = false;
+			}
+			
+			if (decreaseButtonPressed) {
+				driveConstant -= jump;
+				decreaseButtonPressed = false;
+			}
+		}
 		// check the constant value for TESTING 
 //		System.out.println("Constant Value: " + driveConstant);
 		System.out.println("Turn: " + turn);
 		System.out.println("Throttle: " + throttle * 90);
+		System.out.println("Constant: " + driveConstant);
 		
 		// calls drive code command
 		test(throttle, turn);

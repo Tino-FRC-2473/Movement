@@ -15,10 +15,14 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
 public class PIDriveTrain extends PIDSubsystem {
 
 	// KP, KI, and KD values used for PID
-	private static final double KP = 0.0035;
+	private static final double KP = 0.0035; // 0.0035
 	private static final double KI = 0.000035; //0.000035;
 	private static final double KD = 0.001; //0.001;
 
+//	private static final double KP = 0.01; // 0.0035
+//	private static final double KI = 0.0005; //0.000035;
+//	private static final double KD = 0.002; //0.001;
+//	
 	private RobotDrive driver;
 
 	private double rotateToAngleRate; // the value changed by PID
@@ -41,6 +45,7 @@ public class PIDriveTrain extends PIDSubsystem {
 		
 		// Creates a robot driver
 		driver = new RobotDrive(Devices.getInstance().getTalon(RobotMap.FRONT_LEFT), Devices.getInstance().getTalon(RobotMap.BACK_LEFT), Devices.getInstance().getTalon(RobotMap.FRONT_RIGHT), Devices.getInstance().getTalon(RobotMap.BACK_RIGHT));
+//		Devices.getInstance().getTalon(RobotMap.FRONT_LEFT).changeControlMode(TalonControlMode.);
 	}
 
 	public void initDefaultCommand() {
@@ -76,7 +81,7 @@ public class PIDriveTrain extends PIDSubsystem {
 	 * Drives the robot given the speed and the rotation angle.
 	 */
 	public void drive(double speed, double rotation) {
-		driver.arcadeDrive(speed, rotation);
+		driver.arcadeDrive(-speed, rotation);
 	}
 
 	/**

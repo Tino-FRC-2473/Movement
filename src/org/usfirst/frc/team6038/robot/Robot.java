@@ -16,7 +16,7 @@ import org.usfirst.frc.team6038.framework.trackers.NavXTracker;
 import org.usfirst.frc.team6038.framework.trackers.NavXTracker.NavXTarget;
 import org.usfirst.frc.team6038.framework.trackers.TalonTracker;
 import org.usfirst.frc.team6038.framework.trackers.TalonTracker.Target;
-import org.usfirst.frc.team6038.robot.commands.DriveStraight;
+import org.usfirst.frc.team6038.robot.commands.DriveStraight_Auto;
 import org.usfirst.frc.team6038.robot.commands.TestDrive;
 import org.usfirst.frc.team6038.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team6038.robot.subsystems.PIDriveTrain;
@@ -49,6 +49,9 @@ public class Robot extends IterativeRobot {
 	public static ArrayBlockingQueue<String> tempData;
 	
 	public static DeviceReader deviceReader;
+	
+	private static final double AUTO_ENCODER_LIMIT = 100000;
+	private static final double AUTO_POW = 0.6;
 
 	Command autonomousCommand;
 	Command teleopCommand;
@@ -66,7 +69,7 @@ public class Robot extends IterativeRobot {
 		deviceReader.start();
 		ControlsReader.getInstance().init();
 		oi = new OI();
-		tempData = new ArrayBlockingQueue<String>(25);
+		tempData = new ArrayBlockingQueue<String>(500);
 		chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
@@ -74,7 +77,7 @@ public class Robot extends IterativeRobot {
 		teleopCommand = new TestDrive();
 		try 
 		{
-			server = new Server(1939);
+			server = new Server(2017);
 			//CVSocket = new UtilitySocket("Jetson name filler", 5050);//pls change cuz these parameters are fake af
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -90,6 +93,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledInit() 
 	{
+		server.closeServer();
 	}
 
 
@@ -112,7 +116,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		piDriveTrain.enable();
-//		autonomousCommand = new DriveStraight(6000); TODO 
+		System.out.println("autonomous init");
+		autonomousCommand = new DriveStraight_Auto(AUTO_ENCODER_LIMIT, AUTO_POW);
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -159,12 +164,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		try {
-			server.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		LiveWindow.run();
 	}
 
 	private static void addDevices(){
@@ -177,18 +176,18 @@ public class Robot extends IterativeRobot {
 	private static void addTrackers(){
 		//		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.BACK_RIGHT_ENC, RobotMap.BACK_RIGHT));
 		//		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.BACK_LEFT_ENC, RobotMap.BACK_LEFT));
-		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.STEERING_WHEEL_X,ControlsMap.STEERING_WHEEL,JoystickType.X));
+//		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.STEERING_WHEEL_X,ControlsMap.STEERING_WHEEL,JoystickType.X));
 		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.FRONT_RIGHT_ENC, RobotMap.FRONT_RIGHT));
 		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.FRONT_LEFT_ENC, RobotMap.FRONT_LEFT));
-		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_Z,ControlsMap.THROTTLE, JoystickType.Z));
+//		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_Z,ControlsMap.THROTTLE, JoystickType.Z));
 		Trackers.getInstance().addTracker(new TalonTracker("pfr",RobotMap.FRONT_RIGHT,Target.POWER));
 		Trackers.getInstance().addTracker(new TalonTracker("pfl",RobotMap.FRONT_LEFT,Target.POWER));
 		Trackers.getInstance().addTracker(new TalonTracker("pbr",RobotMap.BACK_RIGHT,Target.POWER));
 		Trackers.getInstance().addTracker(new TalonTracker("pbl",RobotMap.BACK_LEFT,Target.POWER));
 		Trackers.getInstance().addTracker(new NavXTracker(RobotMap.GYRO_YAW, NavXTarget.YAW));
 		Trackers.getInstance().addTracker(new NavXTracker(RobotMap.GYRO_RATE, NavXTarget.RATE));
-		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_KEY, ControlsMap.THROTTLE, JoystickType.Z));
-		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON_DECREASE_KEY, ControlsMap.THROTTLE, ControlsMap.CONSTANT_BUTTON_DECREASE_NUMBER));
-		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON_INCREASE_KEY, ControlsMap.THROTTLE, ControlsMap.CONSTANT_BUTTON_INCREASE_NUMBER));
+//		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_KEY, ControlsMap.THROTTLE, JoystickType.Z));
+//		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON_DECREASE_KEY, ControlsMap.THROTTLE, ControlsMap.CONSTANT_BUTTON_DECREASE_NUMBER));
+//		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON_INCREASE_KEY, ControlsMap.THROTTLE, ControlsMap.CONSTANT_BUTTON_INCREASE_NUMBER));
 	}
 }

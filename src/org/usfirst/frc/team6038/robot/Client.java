@@ -26,10 +26,8 @@ public class Client
 		{
 			String a = scan.nextLine();
 			System.out.println("Socket receiving: " + a);
-
-			if(!a.equals(RobotMap.NO_TRIALS))
-			{
-				fw1.write(a + "\n");
+			if(!a.equals(RobotMap.NO_TRIALS)){
+				fw1.write(a+"\n");
 			}
 			else
 			{
