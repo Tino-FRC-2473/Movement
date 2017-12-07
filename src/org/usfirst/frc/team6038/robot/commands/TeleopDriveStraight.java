@@ -1,15 +1,18 @@
 package org.usfirst.frc.team6038.robot.commands;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.usfirst.frc.team6038.framework.Database;
 import org.usfirst.frc.team6038.framework.components.Devices;
+import org.usfirst.frc.team6038.robot.ControlsMap;
 import org.usfirst.frc.team6038.robot.Robot;
 import org.usfirst.frc.team6038.robot.RobotMap;
 
-import com.ctre.CANTalon.TalonControlMode;
-
 import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveStraight_Auto extends Command {
+public class TeleopDriveStraight extends Command {
 
 	private double maxPow = 0.8;
 	private double wheelDeadzone = 0.04;
@@ -22,48 +25,34 @@ public class DriveStraight_Auto extends Command {
 	private final double powToSpeedRatio = 35; // the ratio converting power to actual speed while driving straight
 	private final double speedMaxThreshold = 15; // the threshold determining the max pow while turning
 	private final double powCapMod = 0.7; // the modifier for reducing the power while turning
-	private double encoder;
-	private double power;
+	
 	private float angle = 0;
 	//private double encoders = 0;
 	
-	public DriveStraight_Auto(double encoder, double power) {
+	public TeleopDriveStraight() {
 		requires(Robot.piDriveTrain);
 		angle = Devices.getInstance().getNavXGyro().getYaw();
-		this.encoder = encoder; 
-		if(Math.abs(power) > this.maxPow){
-			this.power = maxPow*Math.signum(power);
-		}else{
-			this.power = power;
-		}
+		//this.encoders = encoders; 
 	}
 
 	@Override
 	protected void initialize() {
-		resetEncoders();
 		Robot.piDriveTrain.enable();
-		Devices.getInstance().getNavXGyro().zeroYaw();
-		Robot.piDriveTrain.setTargetAngle(Database.getInstance().getNumeric(RobotMap.GYRO_YAW));
-	}
-
-	private void resetEncoders() {
-		resetOneEncoder(RobotMap.FRONT_LEFT);
-		resetOneEncoder(RobotMap.FRONT_RIGHT);
-		resetOneEncoder(RobotMap.BACK_LEFT);
-		resetOneEncoder(RobotMap.BACK_RIGHT);
-	}
-	
-	private void resetOneEncoder(int talonId) {
-		Devices.getInstance().getTalon(talonId).changeControlMode(TalonControlMode.Position);
-		Devices.getInstance().getTalon(talonId).setPosition(0);
-		Devices.getInstance().getTalon(talonId).changeControlMode(TalonControlMode.PercentVbus);
 	}
 
 	@Override
 	protected void execute() {
-		Robot.piDriveTrain.drive(power, Robot.piDriveTrain.getAngleRate());
+		if(Math.abs(Database.getInstance().getNumeric(ControlsMap.THROTTLE_Z)) < throttleDeadzone){
+			Robot.piDriveTrain.drive(0, Database.getInstance().getNumeric(ControlsMap.STEERING_WHEEL_X));
+		}else{
+			Robot.piDriveTrain.setTargetAngle( Database.getInstance().getNumeric(ControlsMap.STEERING_WHEEL_X)*90);
+			Robot.piDriveTrain.drive(Database.getInstance().getNumeric(ControlsMap.THROTTLE_Z), Robot.piDriveTrain.getAngleRate());
+			//turn(Database.getInstance().getNumeric(ControlsMap.THROTTLE_Z), Robot.piDriveTrain.getAngleRate());
+		}
+//		Robot.piDriveTrain.setTargetAngle(angle);
+//		this.turn(Database.getInstance().getNumeric(ControlsMap.THROTTLE_Z), Robot.piDriveTrain.getAngleRate());
 	}
-	
+
 	private double squareWithSign(double d) {
 		if (d >= 0.04) {
 			return -d * d;
@@ -159,7 +148,8 @@ public class DriveStraight_Auto extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return ((Math.abs(Database.getInstance().getNumeric(RobotMap.FRONT_RIGHT_ENC)) + Math.abs(Database.getInstance().getNumeric(RobotMap.FRONT_LEFT_ENC)))/2) >= encoder;
+		//return ((Database.getInstance().getNumeric(RobotMap.FRONT_RIGHT_ENC) + Database.getInstance().getNumeric(RobotMap.FRONT_LEFT_ENC))/2)<=encoders;
+		return false;
 	}
 
 	@Override

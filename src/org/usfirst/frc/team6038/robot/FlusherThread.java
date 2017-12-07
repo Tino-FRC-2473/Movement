@@ -17,13 +17,14 @@ public class FlusherThread extends Thread {
 
 	public void endFlusher() {
 		isFlusherAlive = false;
-		System.out.println("flusher ended");
+		System.out.println("Flusher ended.");
 	}
 
 	@Override
 	public void run() {
+		ArrayList<String> arr;
 		while (true) {
-			ArrayList<String> arr = new ArrayList<>();
+			arr = new ArrayList<String>();
 			if (Robot.tempData.size() >= 10) {
 				Robot.tempData.drainTo(arr);
 			}

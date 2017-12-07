@@ -38,4 +38,7 @@ public class RobotMap {
 	
 	public static final String GYRO_YAW = "gyro yaw";
 	public static final String GYRO_RATE = "gyro rate";
+	
+	public static final String GET_VALUE = "WE NEED TO PUT IN THE RIGHT VALUE HERE"; // TODO
+	public static final double INCH_OVER_ENCODER = 0;
 }

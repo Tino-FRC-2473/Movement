@@ -16,7 +16,7 @@ import org.usfirst.frc.team6038.framework.trackers.NavXTracker;
 import org.usfirst.frc.team6038.framework.trackers.NavXTracker.NavXTarget;
 import org.usfirst.frc.team6038.framework.trackers.TalonTracker;
 import org.usfirst.frc.team6038.framework.trackers.TalonTracker.Target;
-import org.usfirst.frc.team6038.robot.commands.DriveStraight_Auto;
+import org.usfirst.frc.team6038.robot.commands.AutoDriveStraight;
 import org.usfirst.frc.team6038.robot.commands.TestDrive;
 import org.usfirst.frc.team6038.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team6038.robot.subsystems.PIDriveTrain;
@@ -117,7 +117,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		piDriveTrain.enable();
 		System.out.println("autonomous init");
-		autonomousCommand = new DriveStraight_Auto(AUTO_ENCODER_LIMIT, AUTO_POW);
+		autonomousCommand = new AutoDriveStraight(AUTO_ENCODER_LIMIT, AUTO_POW);
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
