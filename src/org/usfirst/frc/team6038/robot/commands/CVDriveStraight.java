@@ -35,6 +35,7 @@ public class CVDriveStraight extends Command {
 	private PrintStream out;
 	
 	public CVDriveStraight() {
+		requires(Robot.piDriveTrain);
 		// for retrieving info from CV
 		Thread cv = new Thread() {
 			public void run() {
@@ -63,7 +64,6 @@ public class CVDriveStraight extends Command {
 			}
 		};
 		cv.start();
-		requires(Robot.piDriveTrain);
 	}
 
 	@Override

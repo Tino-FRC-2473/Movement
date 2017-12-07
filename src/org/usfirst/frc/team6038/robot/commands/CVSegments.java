@@ -38,15 +38,7 @@ public class CVSegments extends CommandGroup {
 	public CVSegments() {
 		initSocket();
 		
-		out.println(RobotMap.GET_VALUE);
-		while (true) {
-			if (in.hasNextDouble()) {
-				distance = in.nextDouble();
-				CVAngle = in.nextDouble();
-				break;
-			}
-			
-		}
+		// TODO init segment command
 	}
 
 	private void initSocket() {

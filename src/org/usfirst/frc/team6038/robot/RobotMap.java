@@ -41,4 +41,11 @@ public class RobotMap {
 	
 	public static final String GET_VALUE = "WE NEED TO PUT IN THE RIGHT VALUE HERE"; // TODO
 	public static final double INCH_OVER_ENCODER = 0;
+	 // TODO what should the power be when x inches are left for the segment?
+	public static final double POWER_OVER_INCH = 0;
+	public static final double MAX_POW_SEG = 0.7;
+	// the ratio of power difference over power for CVSegments
+	public static final double DIFF_OVER_POW_SEG = 0.5;
+	// the turning power for CVSegmments, NEVER negative
+	public static final double TURN_POW_SEG = 0.5;
 }
