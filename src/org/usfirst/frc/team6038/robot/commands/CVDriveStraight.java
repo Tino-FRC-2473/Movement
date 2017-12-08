@@ -14,6 +14,7 @@ import com.ctre.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class CVDriveStraight extends Command {
+	// WARNING cannot be used until networking code is deleted
 
 	private final double MAX_POW = 0.8;
 	private final double MIN_POW = 0.1;	
@@ -52,7 +53,7 @@ public class CVDriveStraight extends Command {
 				}
 				initialDistance = in.nextDouble();
 				while (isAlive) {
-					out.println(RobotMap.GET_VALUE);
+//					out.println(RobotMap.GET_VALUE);
 					while (true) {
 						if (in.hasNextDouble()) {
 							distance = in.nextDouble();
