@@ -65,7 +65,6 @@ public class MakeshiftTurn extends Command {
 	private void setRightPow(double pow) {
 		Devices.getInstance().getTalon(RobotMap.FRONT_RIGHT).set(-pow);
 		Devices.getInstance().getTalon(RobotMap.BACK_RIGHT).set(-pow);
-
 	}
 
 	private void setLeftPow(double pow) {
