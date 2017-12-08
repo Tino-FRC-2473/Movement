@@ -11,9 +11,12 @@ public class RobotMap {
 	public static final int FRONT_LEFT = 2;
 	public static final int BACK_RIGHT = 5;
 	public static final int BACK_LEFT = 3;
+	public static final int TESTING_ENC = 2;
 	
 	public static final String FRONT_RIGHT_ENC = "FR_ENC";
 	public static final String FRONT_LEFT_ENC = "FL_ENC";
+	public static final String TESTING_ENC_KEY = "T_ENC";
+	public static final String TESTING_ANALOG_GYRO_KEY = "A_G";
 	
 	public static final int MOTOR = 6;
 	public static final int SERVO = 0;
@@ -39,13 +42,17 @@ public class RobotMap {
 	public static final String GYRO_YAW = "gyro yaw";
 	public static final String GYRO_RATE = "gyro rate";
 	
-	public static final String GET_VALUE = "WE NEED TO PUT IN THE RIGHT VALUE HERE"; // TODO
-	public static final double INCH_OVER_ENCODER = 0;
-	 // TODO what should the power be when x inches are left for the segment?
-	public static final double POWER_OVER_INCH = 0;
-	public static final double MAX_POW_SEG = 0.7;
+	// CV movement constants below
+	public static final double INCH_OVER_ENCODER = 0.00157;
+	
+	// these values are likely not final
+	public static final double POWER_OVER_INCH = 0.001; // the power over the distance left in inches
+	public static final double MAX_POW_SEG = 0.7; // maximum power for Segment code
+	public static final double MIN_POW_SEG = 0.1; // minimum power for Segment code
 	// the ratio of power difference over power for CVSegments
 	public static final double DIFF_OVER_POW_SEG = 0.5;
 	// the turning power for CVSegmments, NEVER negative
 	public static final double TURN_POW_SEG = 0.5;
-}
+	// at this distance (inches), the robot says "I've reached the target" and CVSegments cancels itself
+	public static final double MIN_DISTANCE_TOLERANCE = 5;
+	}

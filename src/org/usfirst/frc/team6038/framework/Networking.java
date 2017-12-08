@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 import org.usfirst.frc.team6038.robot.RobotMap;
+import org.usfirst.frc.team6038.framework.Database;
 
 /**
  * Networking class for communication between Jetson and RIO and possibly others
@@ -14,7 +15,7 @@ import org.usfirst.frc.team6038.robot.RobotMap;
  * @author Harmony He
  * @version 1.0
  */
-public class Networking extends Thread{
+public class Networking extends Thread {
 	private volatile boolean running; //stores whether the process is running or not
 	private Scanner in; //Scanner for receive() values
 	private String host; //Host address
@@ -29,8 +30,8 @@ public class Networking extends Thread{
 	 * */
 	public Networking() throws UnknownHostException, IOException {
 		in = new Scanner("");
-		host = "";
-		port = 8888;
+		host = "10.19.49.48";
+		port = 5005;
 		running = true;
 		s = new Socket(host, port); //Create socket connecting to the specified host and port
 		sc1= new Scanner(System.in); //Scanner for client input

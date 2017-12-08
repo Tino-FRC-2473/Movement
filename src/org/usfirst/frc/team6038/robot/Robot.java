@@ -1,30 +1,24 @@
 package org.usfirst.frc.team6038.robot;
 
-import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import org.usfirst.frc.team2473.robot.commands.ExampleCommand;
+import org.usfirst.frc.team6038.framework.Database;
+import org.usfirst.frc.team6038.framework.Networking;
 import org.usfirst.frc.team6038.framework.components.Devices;
 import org.usfirst.frc.team6038.framework.components.Trackers;
 import org.usfirst.frc.team6038.framework.readers.ControlsReader;
 import org.usfirst.frc.team6038.framework.readers.DeviceReader;
-import org.usfirst.frc.team6038.framework.trackers.ButtonTracker;
 import org.usfirst.frc.team6038.framework.trackers.EncoderTracker;
-import org.usfirst.frc.team6038.framework.trackers.JoystickTracker;
-import org.usfirst.frc.team6038.framework.trackers.JoystickTracker.JoystickType;
 import org.usfirst.frc.team6038.framework.trackers.NavXTracker;
 import org.usfirst.frc.team6038.framework.trackers.NavXTracker.NavXTarget;
-import org.usfirst.frc.team6038.framework.trackers.TalonTracker;
-import org.usfirst.frc.team6038.framework.trackers.TalonTracker.Target;
-import org.usfirst.frc.team6038.robot.commands.AutoDriveStraight;
-import org.usfirst.frc.team6038.robot.commands.TestDrive;
+import org.usfirst.frc.team6038.robot.commands.CVSegments;
 import org.usfirst.frc.team6038.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team6038.robot.subsystems.PIDriveTrain;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -70,19 +64,21 @@ public class Robot extends IterativeRobot {
 		ControlsReader.getInstance().init();
 		oi = new OI();
 		tempData = new ArrayBlockingQueue<String>(500);
+		Networking.getInstance().start();
 		chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
 		piDriveTrain = new PIDriveTrain();
-		teleopCommand = new TestDrive();
-		try 
-		{
-			server = new Server(2017);
-			//CVSocket = new UtilitySocket("Jetson name filler", 5050);//pls change cuz these parameters are fake af
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		teleopCommand = new TestDrive();
+		// server
+//		try 
+//		{
+//			server = new Server(2017);
+//			//CVSocket = new UtilitySocket("Jetson name filler", 5050);//pls change cuz these parameters are fake af
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 	/**
@@ -93,7 +89,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledInit() 
 	{
-		server.closeServer();
+//		if (server != null)
+//			server.closeServer();
 	}
 
 
@@ -117,7 +114,8 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		piDriveTrain.enable();
 		System.out.println("autonomous init");
-		autonomousCommand = new AutoDriveStraight(AUTO_ENCODER_LIMIT, AUTO_POW);
+//		autonomousCommand = new AutoDriveStraight(AUTO_ENCODER_LIMIT, AUTO_POW);
+		CVSegments.getInstance().start();
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -136,6 +134,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		System.out.println("current gyro:" + Devices.getInstance().getNavXGyro().getYaw());
+		System.out.println("target angle:" + Database.getInstance().getNumeric(RobotMap.PEG_ANGLE));
 	}
 
 	@Override
@@ -144,11 +144,13 @@ public class Robot extends IterativeRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
-		if (autonomousCommand != null){
+		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 			piDriveTrain.disable();
 		}
-		teleopCommand.start();
+		Devices.getInstance().getTalon((RobotMap.FRONT_LEFT)).reset();
+//		teleopCommand.start();
+
 	}
 
 	/**
@@ -157,6 +159,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		Devices.getInstance().getTalon((RobotMap.FRONT_LEFT)).set(0.1);
+		System.out.println(Devices.getInstance().getTalon(RobotMap.FRONT_LEFT).getPosition());
 	}
 
 	/**
@@ -174,16 +178,14 @@ public class Robot extends IterativeRobot {
 	}
 
 	private static void addTrackers(){
-		//		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.BACK_RIGHT_ENC, RobotMap.BACK_RIGHT));
-		//		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.BACK_LEFT_ENC, RobotMap.BACK_LEFT));
 //		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.STEERING_WHEEL_X,ControlsMap.STEERING_WHEEL,JoystickType.X));
 		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.FRONT_RIGHT_ENC, RobotMap.FRONT_RIGHT));
 		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.FRONT_LEFT_ENC, RobotMap.FRONT_LEFT));
 //		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_Z,ControlsMap.THROTTLE, JoystickType.Z));
-		Trackers.getInstance().addTracker(new TalonTracker("pfr",RobotMap.FRONT_RIGHT,Target.POWER));
-		Trackers.getInstance().addTracker(new TalonTracker("pfl",RobotMap.FRONT_LEFT,Target.POWER));
-		Trackers.getInstance().addTracker(new TalonTracker("pbr",RobotMap.BACK_RIGHT,Target.POWER));
-		Trackers.getInstance().addTracker(new TalonTracker("pbl",RobotMap.BACK_LEFT,Target.POWER));
+//		Trackers.getInstance().addTracker(new TalonTracker("pfr",RobotMap.FRONT_RIGHT,Target.POWER));
+//		Trackers.getInstance().addTracker(new TalonTracker("pfl",RobotMap.FRONT_LEFT,Target.POWER));
+//		Trackers.getInstance().addTracker(new TalonTracker("pbr",RobotMap.BACK_RIGHT,Target.POWER));
+//		Trackers.getInstance().addTracker(new TalonTracker("pbl",RobotMap.BACK_LEFT,Target.POWER));
 		Trackers.getInstance().addTracker(new NavXTracker(RobotMap.GYRO_YAW, NavXTarget.YAW));
 		Trackers.getInstance().addTracker(new NavXTracker(RobotMap.GYRO_RATE, NavXTarget.RATE));
 //		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_KEY, ControlsMap.THROTTLE, JoystickType.Z));
