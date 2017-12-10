@@ -24,7 +24,8 @@ public class Segment extends Command {
     }
 
     // Called just before this Command runs the first time
-    protected void initialize() {
+    protected void initialize() 
+    {
     	// TODO set the robot to the right angle (perhaps using gyro)
 		
 		if (distanceLeft_inches <= RobotMap.MIN_DISTANCE_TOLERANCE) {
@@ -35,10 +36,12 @@ public class Segment extends Command {
 		Devices.getInstance().getNavXGyro().zeroYaw();
     	float currentAngle = Devices.getInstance().getNavXGyro().getYaw();
 		
-    	if (currentAngle < cvAngle) {
+    	if (currentAngle < cvAngle) 
+    	{
     		// if robot needs to turn right
     		turnOnADimeCV(1);
-    		while (currentAngle < cvAngle) {
+    		while (currentAngle < cvAngle) 
+    		{
     			currentAngle = Devices.getInstance().getNavXGyro().getYaw();
     		}
     		stopTurning();
@@ -111,7 +114,8 @@ public class Segment extends Command {
     }
 
     // Called once after isFinished returns true
-    protected void end() {
+    protected void end() 
+    {
     	CVSegments.getInstance().addSequential(new Segment(Database.getInstance().getNumeric(RobotMap.PEG_DISTANCE),
     			Database.getInstance().getNumeric(RobotMap.PEG_ANGLE)));
     }
