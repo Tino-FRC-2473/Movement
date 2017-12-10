@@ -22,6 +22,6 @@ public class CVSegments extends CommandGroup {
 
 	public CVSegments() {
 		this.addSequential(new Segment(Database.getInstance().getNumeric(RobotMap.PEG_DISTANCE),
-				Database.getInstance().getNumeric(RobotMap.PEG_ANGLE)));
+				Database.getInstance().getNumeric(RobotMap.PEG_ANGLE), false));
 	}
 }

@@ -43,10 +43,9 @@ public class RobotMap {
 	public static final String GYRO_RATE = "gyro rate";
 	
 	// CV movement constants below
-	public static final double INCH_OVER_ENCODER = 0.00157;
-	
+	public static final double INCH_OVER_ENCODER = 0.00157; // 0.00177
 	// these values are likely not final
-	public static final double POWER_OVER_INCH = 0.001; // the power over the distance left in inches
+	public static final double POWER_OVER_INCH = 0.01; // the power over the distance left in inches
 	public static final double MAX_POW_SEG = 0.7; // maximum power for Segment code
 	public static final double MIN_POW_SEG = 0.1; // minimum power for Segment code
 	// the ratio of power difference over power for CVSegments
@@ -55,4 +54,7 @@ public class RobotMap {
 	public static final double TURN_POW_SEG = 0.5;
 	// at this distance (inches), the robot says "I've reached the target" and CVSegments cancels itself
 	public static final double MIN_DISTANCE_TOLERANCE = 5;
+	// the distance of each segment over the total distance left
+	public static final double TARGET_OVER_TOTAL = 0.2;
+	public static final double MIN_SEGMENT_TOLERANCE = 4;
 	}

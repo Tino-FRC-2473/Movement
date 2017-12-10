@@ -5,6 +5,8 @@ import org.usfirst.frc.team6038.framework.components.Devices;
 import org.usfirst.frc.team6038.robot.Robot;
 import org.usfirst.frc.team6038.robot.RobotMap;
 
+import com.ctre.CANTalon.TalonControlMode;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -14,21 +16,29 @@ public class Segment extends Command {
 	private double distanceLeft_inches;
 	private double targetDistance_inches;
 	private double cvAngle;
-	private double startingEncoder;
 	
-    public Segment(double dist, double ang) {
+	private boolean isTesting;
+	
+    public Segment(double dist, double ang, boolean isTesting) {
         requires(Robot.piDriveTrain);
         distanceLeft_inches = dist;
         cvAngle = ang;
-        startingEncoder = Devices.getInstance().getTalon(RobotMap.FRONT_LEFT).getEncPosition();
+        
+        this.isTesting = isTesting;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	// TODO set the robot to the right angle (perhaps using gyro)
 		
-		if (distanceLeft_inches <= RobotMap.MIN_DISTANCE_TOLERANCE) {
+		if (distanceLeft_inches < RobotMap.MIN_DISTANCE_TOLERANCE) {
+			// finished
 			CVSegments.getInstance().cancel();
+		}
+		
+		targetDistance_inches = RobotMap.TARGET_OVER_TOTAL * distanceLeft_inches;
+		
+		if (targetDistance_inches < RobotMap.MIN_SEGMENT_TOLERANCE) {
+			targetDistance_inches = RobotMap.MIN_SEGMENT_TOLERANCE;
 		}
 		
 		// zero and get current angle
@@ -41,18 +51,22 @@ public class Segment extends Command {
     		while (currentAngle < cvAngle) {
     			currentAngle = Devices.getInstance().getNavXGyro().getYaw();
     		}
-    		stopTurning();
+    		stopMoving();
     	} else if (currentAngle > cvAngle){
     		// if robot needs to turn left
     		turnOnADimeCV(-1);
     		while (currentAngle > cvAngle) {
     			currentAngle = Devices.getInstance().getNavXGyro().getYaw();
     		}
-    		stopTurning();
+    		stopMoving();
     	}
+    	
+    	AutoDriveStraight.resetEncoderCount();
+    	System.out.println("Initialize has ended.");
     }
 
-    private void turnOnADimeCV(int b) {
+	private void turnOnADimeCV(int b) {
+		System.out.println("Robot has started turning...");
     	double power = RobotMap.TURN_POW_SEG;
     	double powDiff = power*RobotMap.DIFF_OVER_POW_SEG;
     	if (b > 0) {
@@ -64,34 +78,39 @@ public class Segment extends Command {
     		setRightPow(power+powDiff);
     		setLeftPow(power-powDiff);
     	}
+    	System.out.println("Robot has finished turning.");
     }
     
-	private void stopTurning() {
-		setLeftPow(0);
-		setRightPow(0);
+	private void stopMoving() {
+		Devices.getInstance().getTalon(RobotMap.FRONT_RIGHT).set(0);
+		Devices.getInstance().getTalon(RobotMap.BACK_RIGHT).set(0);
+		Devices.getInstance().getTalon(RobotMap.FRONT_LEFT).set(0);
+		Devices.getInstance().getTalon(RobotMap.BACK_LEFT).set(0);
 	}
 	
 	private void setRightPow(double pow) {
 		double cappedPow = cap(pow);
-		
+		System.out.println("capped right power: " + cappedPow);
 		Devices.getInstance().getTalon(RobotMap.FRONT_RIGHT).set(-cappedPow);
 		Devices.getInstance().getTalon(RobotMap.BACK_RIGHT).set(-cappedPow);
 	}
 
 	private void setLeftPow(double pow) {
 		double cappedPow = cap(pow);
-				
+		System.out.println("capped left power: " + cappedPow);
 		Devices.getInstance().getTalon(RobotMap.FRONT_LEFT).set(cappedPow);
 		Devices.getInstance().getTalon(RobotMap.BACK_LEFT).set(cappedPow);
 	}
 
 	// Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	double pow = targetDistance_inches * RobotMap.POWER_OVER_INCH;
-    	// TODO add this back
+    	double pow = -targetDistance_inches * RobotMap.POWER_OVER_INCH;
     	setLeftPow(pow);
     	setRightPow(pow);
-    	Devices.getInstance().getTalon(RobotMap.TESTING_ENC).set(cap(pow));
+    	System.out.println("Distance Left: " + distanceLeft_inches);
+    	System.out.println("Target Distance: " + targetDistance_inches);
+    	System.out.println("CV Angle: " + cvAngle);
+    	System.out.println("Enc: " + getAverage());
     }
     
     private double cap(double pow) {
@@ -106,14 +125,36 @@ public class Segment extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (Devices.getInstance().getTalon(RobotMap.FRONT_LEFT).getEncPosition()-
-        		startingEncoder>= targetDistance_inches/RobotMap.INCH_OVER_ENCODER);
+        return ((getAverage())>= targetDistance_inches/RobotMap.INCH_OVER_ENCODER);
+    }
+    
+    private double getAverage() {
+    	// TODO
+    	changeAllTalonControlMode(TalonControlMode.Position);
+    	double avg = (Devices.getInstance().getTalon(RobotMap.FRONT_LEFT).getEncPosition()+
+    			Devices.getInstance().getTalon(RobotMap.FRONT_RIGHT).getEncPosition()+
+    			Devices.getInstance().getTalon(RobotMap.BACK_LEFT).getEncPosition()+
+    			Devices.getInstance().getTalon(RobotMap.BACK_RIGHT).getEncPosition())/4;
+    	changeAllTalonControlMode(TalonControlMode.PercentVbus);
+    	return avg;
+    	
+    }
+    
+    private static void changeAllTalonControlMode(TalonControlMode mode) {
+    	Devices.getInstance().getTalon(RobotMap.FRONT_LEFT).changeControlMode(mode);
+    	Devices.getInstance().getTalon(RobotMap.FRONT_RIGHT).changeControlMode(mode);
+    	Devices.getInstance().getTalon(RobotMap.BACK_LEFT).changeControlMode(mode);
+    	Devices.getInstance().getTalon(RobotMap.BACK_RIGHT).changeControlMode(mode);
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	CVSegments.getInstance().addSequential(new Segment(Database.getInstance().getNumeric(RobotMap.PEG_DISTANCE),
-    			Database.getInstance().getNumeric(RobotMap.PEG_ANGLE)));
+    	if (!isTesting) {
+	    	CVSegments.getInstance().addSequential(new Segment(Database.getInstance().getNumeric(RobotMap.PEG_DISTANCE),
+	    			Database.getInstance().getNumeric(RobotMap.PEG_ANGLE), false));
+    	} else {
+    		stopMoving();
+    	}
     }
 
     // Called when another command which requires one or more of the same
