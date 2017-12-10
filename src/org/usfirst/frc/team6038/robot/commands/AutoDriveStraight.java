@@ -40,20 +40,20 @@ public class AutoDriveStraight extends Command {
 
 	@Override
 	protected void initialize() {
-		resetEncoders();
+		resetEncoderCount();
 		Robot.piDriveTrain.enable();
 		Devices.getInstance().getNavXGyro().zeroYaw();
 		Robot.piDriveTrain.setTargetAngle(Database.getInstance().getNumeric(RobotMap.GYRO_YAW));
 	}
 
-	private void resetEncoders() {
+	public static void resetEncoderCount() {
 		resetOneEncoder(RobotMap.FRONT_LEFT);
 		resetOneEncoder(RobotMap.FRONT_RIGHT);
 		resetOneEncoder(RobotMap.BACK_LEFT);
 		resetOneEncoder(RobotMap.BACK_RIGHT);
 	}
 	
-	private void resetOneEncoder(int talonId) {
+	private static void resetOneEncoder(int talonId) {
 		Devices.getInstance().getTalon(talonId).changeControlMode(TalonControlMode.Position);
 		Devices.getInstance().getTalon(talonId).setPosition(0);
 		Devices.getInstance().getTalon(talonId).changeControlMode(TalonControlMode.PercentVbus);

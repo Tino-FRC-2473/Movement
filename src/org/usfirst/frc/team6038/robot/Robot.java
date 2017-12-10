@@ -12,11 +12,13 @@ import org.usfirst.frc.team6038.framework.readers.DeviceReader;
 import org.usfirst.frc.team6038.framework.trackers.EncoderTracker;
 import org.usfirst.frc.team6038.framework.trackers.NavXTracker;
 import org.usfirst.frc.team6038.framework.trackers.NavXTracker.NavXTarget;
-import org.usfirst.frc.team6038.robot.commands.CVSegments;
+import org.usfirst.frc.team6038.robot.commands.Segment;
 import org.usfirst.frc.team6038.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team6038.robot.subsystems.PIDriveTrain;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -33,6 +35,8 @@ public class Robot extends IterativeRobot {
 
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
+	
+	public static boolean isNetwork = false;
 
 	public static PIDriveTrain piDriveTrain;
 
@@ -46,6 +50,8 @@ public class Robot extends IterativeRobot {
 	
 	private static final double AUTO_ENCODER_LIMIT = 100000;
 	private static final double AUTO_POW = 0.6;
+	
+	private static Relay relay;
 
 	Command autonomousCommand;
 	Command teleopCommand;
@@ -61,14 +67,17 @@ public class Robot extends IterativeRobot {
 		Robot.addTrackers();
 		deviceReader = new DeviceReader();
 		deviceReader.start();
-		ControlsReader.getInstance().init();
-		oi = new OI();
+		//ControlsReader.getInstance().init();
+		//oi = new OI();
 		tempData = new ArrayBlockingQueue<String>(500);
-		Networking.getInstance().start();
+		if(this.isNetwork){
+			Networking.getInstance().start();
+		}
 		chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
 		piDriveTrain = new PIDriveTrain();
+		relay = new Relay(0);
 //		teleopCommand = new TestDrive();
 		// server
 //		try 
@@ -115,7 +124,10 @@ public class Robot extends IterativeRobot {
 		piDriveTrain.enable();
 		System.out.println("autonomous init");
 //		autonomousCommand = new AutoDriveStraight(AUTO_ENCODER_LIMIT, AUTO_POW);
-		CVSegments.getInstance().start();
+		relay.set(Value.kForward);
+		System.out.println("all good before segment");
+		Segment st = new Segment(200, 0, true);
+		st.start();
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -134,8 +146,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-		System.out.println("current gyro:" + Devices.getInstance().getNavXGyro().getYaw());
-		System.out.println("target angle:" + Database.getInstance().getNumeric(RobotMap.PEG_ANGLE));
+//		System.out.println("current gyro:" + Devices.getInstance().getNavXGyro().getYaw());
+//		System.out.println("target angle:" + Database.getInstance().getNumeric(RobotMap.PEG_ANGLE));
 	}
 
 	@Override
