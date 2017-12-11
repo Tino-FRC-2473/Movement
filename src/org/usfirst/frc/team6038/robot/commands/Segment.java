@@ -45,6 +45,8 @@ public class Segment extends Command {
 		Devices.getInstance().getNavXGyro().zeroYaw();
     	float currentAngle = Devices.getInstance().getNavXGyro().getYaw();
 		
+		System.out.println("Robot has started turning...");
+		
     	if (currentAngle < cvAngle) {
     		// if robot needs to turn right
     		turnOnADimeCV(1);
@@ -62,11 +64,10 @@ public class Segment extends Command {
     	}
     	
     	AutoDriveStraight.resetEncoderCount();
-    	System.out.println("Initialize has ended.");
+    	System.out.println("Robot has finished turning.");
     }
 
 	private void turnOnADimeCV(int b) {
-		System.out.println("Robot has started turning...");
     	double power = RobotMap.TURN_POW_SEG;
     	double powDiff = power*RobotMap.DIFF_OVER_POW_SEG;
     	if (b > 0) {
@@ -78,7 +79,6 @@ public class Segment extends Command {
     		setRightPow(power+powDiff);
     		setLeftPow(power-powDiff);
     	}
-    	System.out.println("Robot has finished turning.");
     }
     
 	private void stopMoving() {
