@@ -14,25 +14,26 @@ public class Client
 	{
 		String ip = "10.24.73.2"; 
 		int port_number = 1939;
-		int trialNumber = 2;
+		int trialNumber = 0;
 		File f = new File("data.txt");
 		FileWriter fw1 = new FileWriter(f, false);
 
 		Socket s = new Socket(ip, port_number);
 		Scanner scan = new Scanner(s.getInputStream());
 		System.out.println("Connected.");
+		
 		while (scan.hasNextLine()) 
 		{
 			String a = scan.nextLine();
 			System.out.println("Socket receiving: " + a);
-			
 			if(!a.equals(RobotMap.NO_TRIALS)){
 				fw1.write(a+"\n");
 			}
 			else
 			{
-				System.out.println("Trial " + trialNumber + "\n");
 				trialNumber++;
+				System.out.println("Trial " + trialNumber + "\n");
+				fw1.write("Trial "+trialNumber+"\n");
 			}
 		}
 		s.close();

@@ -1,5 +1,5 @@
 package org.usfirst.frc.team6038.robot;
-
+import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import org.usfirst.frc.team2473.robot.commands.ExampleCommand;

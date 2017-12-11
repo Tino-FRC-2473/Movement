@@ -1,6 +1,7 @@
 package org.usfirst.frc.team6038.robot;
 
 import org.usfirst.frc.team6038.framework.Database;
+import org.usfirst.frc.team6038.robot.Robot;
 
 public class UpdaterThread extends Thread {
 

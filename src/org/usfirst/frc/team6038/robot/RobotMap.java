@@ -54,7 +54,7 @@ public class RobotMap {
 	public static final double TURN_POW_SEG = 0.5;
 	// at this distance (inches), the robot says "I've reached the target" and CVSegments cancels itself
 	public static final double MIN_DISTANCE_TOLERANCE = 5;
-	// the distance of each segment over the total distance left
+	public static final double GYRO_CAMERA_DIST = 0;
 	public static final double TARGET_OVER_TOTAL = 0.2;
 	public static final double MIN_SEGMENT_TOLERANCE = 4;
 	}
