@@ -1,29 +1,17 @@
 package org.usfirst.frc.team6038.robot;
-import java.io.IOException;
-import java.util.concurrent.ArrayBlockingQueue;
-
-import org.usfirst.frc.team2473.robot.commands.ExampleCommand;
-import org.usfirst.frc.team6038.framework.Database;
-import org.usfirst.frc.team6038.framework.Networking;
 import org.usfirst.frc.team6038.framework.components.Devices;
 import org.usfirst.frc.team6038.framework.components.Trackers;
-import org.usfirst.frc.team6038.framework.readers.ControlsReader;
 import org.usfirst.frc.team6038.framework.readers.DeviceReader;
 import org.usfirst.frc.team6038.framework.trackers.EncoderTracker;
 import org.usfirst.frc.team6038.framework.trackers.NavXTracker;
 import org.usfirst.frc.team6038.framework.trackers.NavXTracker.NavXTarget;
-import org.usfirst.frc.team6038.robot.commands.Segment;
-import org.usfirst.frc.team6038.robot.subsystems.ExampleSubsystem;
+import org.usfirst.frc.team6038.robot.commands.SimpleDriveStraight;
 import org.usfirst.frc.team6038.robot.subsystems.PIDriveTrain;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.Relay.Value;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -32,30 +20,23 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
-
-	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+	
+	
+	Preferences prefTest;
+	double test;
 	public static OI oi;
 	
 	public static boolean isNetwork = false;
 
 	public static PIDriveTrain piDriveTrain;
-
-	public static UtilitySocket CVSocket; 
-
-	public static Server server;
-	
-	public static ArrayBlockingQueue<String> tempData;
 	
 	public static DeviceReader deviceReader;
 	
 	private static final double AUTO_ENCODER_LIMIT = 100000;
-	private static final double AUTO_POW = 0.6;
-	
-	private static Relay relay;
+	private static final double AUTO_POW = 0.5;
 
 	Command autonomousCommand;
 	Command teleopCommand;
-	SendableChooser<Command> chooser = new SendableChooser<>();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -65,29 +46,14 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		Robot.addDevices();
 		Robot.addTrackers();
-		deviceReader = new DeviceReader();
-		deviceReader.start();
-		//ControlsReader.getInstance().init();
-		//oi = new OI();
-		tempData = new ArrayBlockingQueue<String>(500);
-		if(this.isNetwork){
-			Networking.getInstance().start();
-		}
-		chooser.addDefault("Default Auto", new ExampleCommand());
-		// chooser.addObject("My Auto", new MyAutoCommand());
-		SmartDashboard.putData("Auto mode", chooser);
+		prefTest = Preferences.getInstance();
+		test = prefTest.getDouble("Test", 5);
+		System.out.println(test);
+		System.out.println("Test pref done");
 		piDriveTrain = new PIDriveTrain();
-		relay = new Relay(0);
-//		teleopCommand = new TestDrive();
-		// server
-//		try 
-//		{
-//			server = new Server(2017);
-//			//CVSocket = new UtilitySocket("Jetson name filler", 5050);//pls change cuz these parameters are fake af
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		System.out.println("PIDrivetrain initialized");
+		autonomousCommand = new SimpleDriveStraight(AUTO_ENCODER_LIMIT, AUTO_POW);
+		System.out.println("auto command initialized");
 	}
 
 	/**
@@ -96,10 +62,8 @@ public class Robot extends IterativeRobot {
 	 * the robot is disabled.
 	 */
 	@Override
-	public void disabledInit() 
-	{
-//		if (server != null)
-//			server.closeServer();
+	public void disabledInit() {
+		SimpleDriveStraight.resetEncoders();
 	}
 
 
@@ -122,22 +86,11 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		piDriveTrain.enable();
-		System.out.println("autonomous init");
-//		autonomousCommand = new AutoDriveStraight(AUTO_ENCODER_LIMIT, AUTO_POW);
-		relay.set(Value.kForward);
-		System.out.println("all good before segment");
-		Segment st = new Segment(200, 0, true);
-		st.start();
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
-
-		// schedule the autonomous command (example)
+		System.out.println("Autonomous Init started...");
+		
 		if (autonomousCommand != null)
 			autonomousCommand.start();
+		
 	}
 
 	/**
@@ -146,16 +99,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-//		System.out.println("current gyro:" + Devices.getInstance().getNavXGyro().getYaw());
-//		System.out.println("target angle:" + Database.getInstance().getNumeric(RobotMap.PEG_ANGLE));
+//		Robot.piDriveTrain.drive(0.6, 0);
 	}
 
 	@Override
 	public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-		// teleop starts running. If you want the autonomous to
-		// continue until interrupted by another command, remove
-		// this line or comment it out.
+		System.out.println("teleop init");
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 			piDriveTrain.disable();
@@ -190,18 +139,9 @@ public class Robot extends IterativeRobot {
 	}
 
 	private static void addTrackers(){
-//		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.STEERING_WHEEL_X,ControlsMap.STEERING_WHEEL,JoystickType.X));
 		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.FRONT_RIGHT_ENC, RobotMap.FRONT_RIGHT));
 		Trackers.getInstance().addTracker(new EncoderTracker(RobotMap.FRONT_LEFT_ENC, RobotMap.FRONT_LEFT));
-//		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_Z,ControlsMap.THROTTLE, JoystickType.Z));
-//		Trackers.getInstance().addTracker(new TalonTracker("pfr",RobotMap.FRONT_RIGHT,Target.POWER));
-//		Trackers.getInstance().addTracker(new TalonTracker("pfl",RobotMap.FRONT_LEFT,Target.POWER));
-//		Trackers.getInstance().addTracker(new TalonTracker("pbr",RobotMap.BACK_RIGHT,Target.POWER));
-//		Trackers.getInstance().addTracker(new TalonTracker("pbl",RobotMap.BACK_LEFT,Target.POWER));
 		Trackers.getInstance().addTracker(new NavXTracker(RobotMap.GYRO_YAW, NavXTarget.YAW));
 		Trackers.getInstance().addTracker(new NavXTracker(RobotMap.GYRO_RATE, NavXTarget.RATE));
-//		Trackers.getInstance().addTracker(new JoystickTracker(ControlsMap.THROTTLE_KEY, ControlsMap.THROTTLE, JoystickType.Z));
-//		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON_DECREASE_KEY, ControlsMap.THROTTLE, ControlsMap.CONSTANT_BUTTON_DECREASE_NUMBER));
-//		Trackers.getInstance().addTracker(new ButtonTracker(ControlsMap.CONSTANT_BUTTON_INCREASE_KEY, ControlsMap.THROTTLE, ControlsMap.CONSTANT_BUTTON_INCREASE_NUMBER));
 	}
 }
